@@ -1,0 +1,851 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interaktives Terme-Training für die 7. Klasse Realschule Bayern">
+  <title>Mein Terme-Abenteuer</title>
+  <style>
+    :root {
+      --ink:#15203b; --muted:#5e6680; --paper:#fffdf8; --panel:#ffffff;
+      --purple:#7257e8; --purple-dark:#5940ce; --pink:#ff6fa9; --mint:#45c9a5;
+      --yellow:#ffd45c; --blue:#52a8ff; --red:#e9576d; --line:#e8e3f4;
+      --shadow:0 14px 40px rgba(64,45,123,.12); --radius:24px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;font-family:ui-rounded,"Avenir Next",Avenir,"Segoe UI",sans-serif;color:var(--ink);background:
+      radial-gradient(circle at 8% 8%,rgba(255,212,92,.32),transparent 28%),
+      radial-gradient(circle at 92% 18%,rgba(82,168,255,.22),transparent 28%),
+      linear-gradient(145deg,#fff9ef 0%,#f5f1ff 52%,#edfaff 100%);}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    button:focus-visible,input:focus-visible{outline:4px solid rgba(82,168,255,.35);outline-offset:3px}
+    .app{width:min(1120px,calc(100% - 28px));margin:0 auto;padding:20px 0 60px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 4px 20px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:-.02em}
+    .brand-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:15px;background:var(--purple);color:white;box-shadow:0 8px 20px rgba(114,87,232,.28);transform:rotate(-4deg)}
+    .status-pills{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;background:rgba(255,255,255,.78);border:1px solid rgba(114,87,232,.12);border-radius:999px;font-weight:800;font-size:.9rem}
+    .hero{position:relative;overflow:hidden;display:grid;grid-template-columns:1.35fr .65fr;gap:28px;align-items:center;padding:42px;background:linear-gradient(135deg,#6e55e5,#866cf0 55%,#5d91ef);border-radius:34px;color:white;box-shadow:0 22px 60px rgba(75,58,166,.24)}
+    .hero:after{content:"";position:absolute;width:260px;height:260px;border:50px solid rgba(255,255,255,.08);border-radius:50%;right:-70px;top:-110px}
+    .eyebrow{display:inline-flex;padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.16);font-size:.84rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+    h1{font-size:clamp(2rem,5vw,4.2rem);line-height:.98;margin:15px 0 16px;letter-spacing:-.055em;max-width:700px}
+    .hero p{font-size:1.08rem;line-height:1.6;margin:0 0 24px;max-width:650px;color:rgba(255,255,255,.9)}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{border:0;border-radius:15px;padding:13px 18px;font-weight:900;transition:transform .16s ease,box-shadow .16s ease,background .16s ease;color:var(--ink);background:#f2eff9}
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{background:var(--yellow);box-shadow:0 8px 20px rgba(255,196,45,.28)}
+    .btn-secondary{background:white;color:var(--purple-dark)}
+    .btn-ghost{background:transparent;border:2px solid var(--line)}
+    .btn-danger{background:#fff0f2;color:#b33149}
+    .btn-small{padding:9px 12px;border-radius:12px;font-size:.9rem}
+    .mascot-wrap{position:relative;display:grid;place-items:center;z-index:1}
+    .mascot{font-size:8rem;filter:drop-shadow(0 18px 20px rgba(40,25,100,.25));animation:float 4s ease-in-out infinite;user-select:none}
+    .speech{position:absolute;right:0;bottom:0;max-width:180px;background:white;color:var(--ink);padding:12px 15px;border-radius:18px 18px 4px 18px;font-weight:800;box-shadow:var(--shadow)}
+    @keyframes float{50%{transform:translateY(-10px) rotate(3deg)}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+    .section{margin-top:30px}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:0 4px 14px}
+    .section-head h2{margin:0;font-size:clamp(1.45rem,3vw,2rem);letter-spacing:-.035em}
+    .section-head p{margin:5px 0 0;color:var(--muted)}
+    .card{background:rgba(255,255,255,.86);border:1px solid rgba(114,87,232,.12);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .quick-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+    .quick{padding:20px;text-align:left;border:0;position:relative;overflow:hidden;min-height:150px}
+    .quick:hover{transform:translateY(-3px)}
+    .quick .icon{font-size:2rem;display:block;margin-bottom:20px}
+    .quick strong{font-size:1.05rem;display:block;margin-bottom:5px}
+    .quick small{color:var(--muted);line-height:1.4;display:block}
+    .goal-card{padding:22px}.goal-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:15px}.goal-head h3{margin:0 0 4px}.goal-head p{margin:0;color:var(--muted)}.goal-count{font-size:1.4rem;font-weight:950;color:var(--purple-dark);white-space:nowrap}
+    .readiness-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.readiness-item{display:flex;align-items:center;gap:10px;background:#f8f7fc;border-radius:14px;padding:11px 13px}.signal{width:12px;height:12px;border-radius:50%;flex:none}.signal.red{background:#e9576d}.signal.yellow{background:#eab72f}.signal.green{background:#30b98f}.readiness-item strong{display:block;font-size:.92rem}.readiness-item small{display:block;color:var(--muted);margin-top:2px}
+    .plan-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}.plan-day{display:flex;flex-direction:column;min-height:190px;padding:15px;background:rgba(255,255,255,.86);border:1px solid rgba(114,87,232,.12);border-radius:18px}.plan-day.done{background:#eafaf5}.plan-day.active{box-shadow:0 0 0 3px rgba(114,87,232,.18)}.plan-num{font-weight:950;color:var(--purple);font-size:.8rem;text-transform:uppercase;letter-spacing:.06em}.plan-day h3{font-size:.96rem;margin:10px 0 7px}.plan-day p{font-size:.82rem;line-height:1.4;color:var(--muted);margin:0 0 12px}.plan-day .btn{margin-top:auto;width:100%;padding:9px 8px;font-size:.82rem}.plan-check{color:#17765d;font-weight:950;margin-top:auto}
+    .test-settings{padding:22px;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:16px;align-items:end}.test-settings h3{margin:0 0 5px}.test-settings p{margin:0;color:var(--muted);line-height:1.45}.setting label{display:block;font-size:.84rem;font-weight:900;margin-bottom:7px}.setting select,.setting input{width:100%;border:2px solid var(--line);border-radius:13px;background:white;padding:11px 13px;color:var(--ink);font-weight:800}.name-setting{grid-column:1/-1}.name-edit{display:flex;gap:8px;max-width:520px}.name-edit input{min-width:0;flex:1}
+    .work-step{background:#f4f1ff;border:2px solid #ded6ff;border-radius:18px;padding:16px;margin:0 0 16px}.work-step.done{background:#eafaf5;border-color:#a8e4d3}.work-step h3{font-size:1rem;margin:0 0 5px}.work-step p{color:var(--muted);margin:0 0 12px;line-height:1.45}.work-message{font-weight:850;margin-top:10px}.work-message.good{color:#176f59}.work-message.bad{color:#9d3346}
+    .parent-report{padding:24px}.parent-report h2{margin:0 0 5px}.parent-report-intro{color:var(--muted);margin:0 0 18px}.report-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.report-stat{background:#f8f7fc;border-radius:14px;padding:14px}.report-stat strong{display:block;font-size:1.45rem;color:var(--purple-dark)}.report-stat span{font-size:.84rem;color:var(--muted)}.report-topics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.report-topic{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;font-size:.88rem}.report-topic span:last-child{font-weight:900}.report-note{margin:16px 0 0;line-height:1.55}.report-actions{margin-top:16px}
+    .collection-card{padding:22px}.collection-card h3{margin:0 0 5px}.collection-card p{margin:0;color:var(--muted)}.collection-grid{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.collectible{display:flex;align-items:center;gap:9px;padding:10px 13px;background:#fff8dd;border-radius:14px;border:1px solid #f0dfa0}.collectible .emoji{font-size:1.45rem}.collectible strong{display:block;font-size:.9rem}.collectible small{display:block;color:var(--muted)}
+    .world-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .world{padding:22px;position:relative;overflow:hidden}
+    .world-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .world-number{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;color:white;font-weight:950;background:var(--world)}
+    .world h3{margin:18px 0 8px;font-size:1.18rem}
+    .world p{color:var(--muted);line-height:1.45;min-height:62px;margin:0 0 18px}
+    .world .btn{width:100%}
+    .world-progress{height:8px;background:#eeeaf6;border-radius:999px;overflow:hidden;margin:0 0 17px}
+    .world-progress span{display:block;height:100%;width:0;background:var(--world);border-radius:inherit;transition:width .35s ease}
+    .stars{font-size:.88rem;letter-spacing:1px;color:#c6bfd9}
+    .stars .on{color:#f4b000}
+    .tip{display:grid;grid-template-columns:auto 1fr;gap:14px;padding:20px;align-items:start}
+    .tip-icon{font-size:2rem}
+    .tip h3{margin:0 0 5px}.tip p{margin:0;color:var(--muted);line-height:1.55}
+    .resume-card{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 24px;border-left:7px solid var(--mint)}
+    .resume-card[hidden]{display:none}.resume-card h2{margin:0 0 5px;font-size:1.18rem}.resume-card p{margin:0;color:var(--muted);line-height:1.45}.resume-actions{display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0}
+    .view{display:none}.view.active{display:block}
+    .backline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 18px}
+    .backline h2{margin:0;font-size:1.3rem}
+    .lesson-shell{display:grid;grid-template-columns:260px minmax(0,1fr);gap:20px;align-items:start;min-width:0}
+    .lesson-side{padding:20px;position:sticky;top:14px}
+    .lesson-side h3{margin:0 0 10px}.lesson-side p{color:var(--muted);line-height:1.5;font-size:.93rem}
+    .side-stat{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-weight:800}
+    .side-stat:last-of-type{border-bottom:0}
+    .progress{height:12px;background:#ebe7f3;border-radius:999px;overflow:hidden;margin-top:14px}
+    .progress span{height:100%;display:block;background:linear-gradient(90deg,var(--mint),var(--blue));width:0;transition:width .35s ease}
+    .lesson-main{padding:clamp(22px,4vw,38px);min-height:520px;min-width:0;overflow:hidden}
+    .explain h2{margin:0 0 10px;font-size:clamp(1.5rem,3vw,2.25rem)}
+    .explain p{line-height:1.65;color:var(--muted)}
+    .rule-box{background:#f4f1ff;border-radius:18px;padding:18px 20px;margin:18px 0;font-weight:800;line-height:1.55;border-left:6px solid var(--purple)}
+    .story-box{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;background:linear-gradient(135deg,#fff6d8,#fffdf6);border-radius:20px;padding:18px;margin:18px 0}.story-avatar{font-size:2.8rem;filter:drop-shadow(0 6px 8px rgba(80,50,20,.12))}.story-box strong{display:block;margin-bottom:4px;color:#75540b}.story-box p{margin:0;color:#665735}
+    .step-list{display:grid;gap:10px;margin:18px 0}.step{display:grid;grid-template-columns:38px 1fr;align-items:center;gap:12px;background:#f8fbff;border-radius:16px;padding:12px 15px}.step-num{width:36px;height:36px;display:grid;place-items:center;border-radius:12px;background:var(--purple);color:white;font-weight:950}.step strong{display:block;margin-bottom:2px}.step span:last-child{color:var(--muted);line-height:1.45}
+    .memory{background:#eafaf5;color:#176f59;border-radius:17px;padding:15px 18px;margin:16px 0;font-weight:900}.trap{background:#fff1f3;color:#953246;border-radius:17px;padding:15px 18px;margin:16px 0;line-height:1.5}.intro-label{margin-top:22px;color:var(--purple);font-weight:950;text-transform:uppercase;letter-spacing:.08em;font-size:.8rem}
+    .intro-stage{max-width:760px;margin:0 auto}.intro-dots{display:flex;gap:7px;margin:0 0 22px}.intro-dots span{width:34px;height:7px;border-radius:999px;background:#e7e1f5}.intro-dots span.on{background:var(--purple)}
+    .plain-board{background:linear-gradient(145deg,#f7f4ff,#f1f9ff);border-radius:22px;padding:clamp(18px,4vw,28px);margin:18px 0}.plain-board h3{font-size:clamp(1.35rem,3vw,1.8rem);margin:0 0 18px}.plain-row{display:grid;grid-template-columns:minmax(72px,auto) 28px 1fr;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #ded8ee}.plain-row:last-of-type{border-bottom:0}.plain-symbol{font-size:1.28rem;font-weight:950;color:var(--purple-dark);text-align:center}.plain-arrow{text-align:center;color:var(--muted);font-weight:900}.plain-meaning{line-height:1.45}.plain-result{margin-top:18px;padding:16px;background:white;border-radius:16px;font-weight:900;line-height:1.55;color:#176f59}.intro-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:22px}.intro-nav-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}.intro-nav .btn:last-child{margin-left:auto}
+    .term-visual{background:white;border-radius:18px;padding:17px;margin:0 0 18px;text-align:center}.tile-row{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;min-height:46px}.x-tile,.n-tile{display:inline-grid;place-items:center;min-width:40px;height:40px;padding:0 9px;border-radius:12px;font-weight:950}.x-tile{background:#e9e4ff;color:var(--purple-dark)}.n-tile{background:#fff1bd;color:#73550b}.tile-sign{font-weight:950;color:var(--muted);padding:0 2px}.tile-caption{margin-top:10px;color:var(--muted);font-size:.9rem;font-weight:800}
+    .examples{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 24px}
+    .example{background:#f8fbff;padding:16px;border-radius:18px}
+    .example small{color:var(--muted);display:block;margin-bottom:8px;font-weight:800}
+    .math{font-family:"Trebuchet MS",ui-rounded,sans-serif;font-size:1.2rem;font-weight:900;letter-spacing:.01em}
+    .question-kicker{color:var(--purple);font-weight:950;text-transform:uppercase;letter-spacing:.08em;font-size:.8rem}
+    .question-text{font-size:clamp(1.4rem,3.6vw,2.1rem);line-height:1.25;font-weight:950;margin:14px 0 22px;letter-spacing:-.025em}
+    .answer-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .answer{min-height:64px;border:2px solid var(--line);background:white;border-radius:16px;padding:14px 16px;font-weight:900;color:var(--ink);text-align:left}
+    .answer:hover{border-color:#bdb1ef;background:#faf9ff}
+    .answer.correct{border-color:var(--mint);background:#eafaf5;color:#14775e}
+    .answer.wrong{border-color:var(--red);background:#fff0f2;color:#aa2e45}
+    .answer:disabled{cursor:default}
+    .number-answer{display:flex;gap:10px;align-items:stretch;max-width:440px;min-width:0}
+    .number-answer input{min-width:0;flex:1;border:2px solid var(--line);border-radius:15px;padding:14px 16px;font-size:1.15rem;font-weight:900;color:var(--ink)}
+    .input-stack{max-width:520px;min-width:0}.input-preview{min-height:28px;margin-bottom:7px;color:var(--purple-dark);font-weight:900}.input-preview.format{color:#9d3346}.keybar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px}.keybar button{min-width:44px;min-height:44px;border:2px solid #d9d1f6;border-radius:11px;background:#f8f6ff;padding:7px 11px;font-weight:950;color:var(--purple-dark);touch-action:manipulation}.sign-choice{display:flex;gap:10px}.sign-choice .btn{min-width:70px;min-height:44px;font-size:1.25rem}.first-step{margin-top:14px;padding:14px 16px;border-radius:15px;background:#eef5ff;color:#315d8f;line-height:1.5}.format-help{color:#9d3346;font-weight:850;margin-top:9px}.choice-muted{opacity:.38;text-decoration:line-through}.solution-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .feedback{display:none;margin-top:20px;padding:18px;border-radius:18px;line-height:1.55}
+    .feedback.show{display:block}.feedback.good{background:#eafaf5;color:#176f59}.feedback.bad{background:#fff1f3;color:#9d3346}.feedback.saved{background:#eef5ff;color:#315d8f}
+    .feedback strong{display:block;margin-bottom:4px;font-size:1.05rem}
+    .action-row{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:22px;flex-wrap:wrap}
+    .hint{display:none;background:#fff8dd;border-radius:16px;padding:15px;margin-top:16px;line-height:1.5;color:#70520b}
+    .hint.show{display:block}
+    .result{text-align:center;padding:20px 0}.result-emoji{font-size:5rem}.result h2{font-size:2rem;margin:10px 0}.result p{color:var(--muted);line-height:1.6}
+    .result-score{font-size:3.5rem;font-weight:950;color:var(--purple);letter-spacing:-.06em}.result-score-small{font-size:1.15rem;letter-spacing:0;margin-top:5px}.worked-count{font-size:clamp(1.9rem,5vw,2.7rem);font-weight:950;color:var(--ink);line-height:1.15;margin-top:10px}
+    .review-list{display:grid;gap:10px;text-align:left;margin:24px 0}.review-item{background:#f8f6fc;border-radius:16px;padding:15px}.review-item strong{display:block;margin-bottom:7px}.review-item p{margin:4px 0}.review-answer{color:#9d3346}.review-correct{color:#176f59;font-weight:900}
+    .cheat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .cheat{padding:22px}.cheat h3{margin:0 0 9px}.cheat p{color:var(--muted);line-height:1.5;margin:0}.cheat .math{display:block;margin-top:12px;color:var(--purple-dark)}
+    .test-info{padding:28px}.test-info h2{margin-top:0}.test-info ul{line-height:1.8;color:var(--muted)}
+    .footer{text-align:center;color:var(--muted);padding-top:34px;font-size:.9rem}
+    .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:100}
+    .confetti i{position:absolute;top:-20px;width:10px;height:18px;border-radius:3px;animation:fall 1.8s linear forwards}
+    @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+    .toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,120px);background:var(--ink);color:white;padding:12px 18px;border-radius:14px;font-weight:800;z-index:110;transition:transform .3s ease;box-shadow:var(--shadow)}
+    .toast.show{transform:translate(-50%,0)}
+    .name-dialog{position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:18px;background:rgba(21,32,59,.48);backdrop-filter:blur(8px)}.name-dialog[hidden]{display:none}.name-dialog-card{width:min(440px,100%);padding:28px;text-align:center}.name-dialog-card .nova{font-size:4.5rem}.name-dialog-card h2{margin:8px 0}.name-dialog-card p{color:var(--muted);line-height:1.5}.name-dialog-card label{display:block;font-weight:950;margin:18px 0 8px}.name-dialog-card input{width:100%;border:2px solid var(--line);border-radius:15px;padding:14px 16px;font-size:1.1rem}.name-dialog-actions{display:grid;gap:9px;margin-top:14px}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .home-hero{padding:24px 30px;grid-template-columns:1fr 170px}.home-hero h1{font-size:clamp(2rem,4vw,3.2rem);margin:10px 0 8px}.home-hero p{margin:0}.home-hero .mascot{font-size:5.6rem}.home-hero .speech{display:none}
+    .today-card{margin-top:16px;padding:22px 26px;display:flex;align-items:center;justify-content:space-between;gap:18px;border:2px solid rgba(114,87,232,.18)}.today-card h2{margin:4px 0 6px;font-size:clamp(1.35rem,3vw,1.8rem)}.today-card p{margin:0;color:var(--muted)}.today-label{font-size:.78rem;font-weight:950;color:var(--purple);text-transform:uppercase;letter-spacing:.08em}.today-card .btn{flex:none}
+    .learning-path{display:grid;gap:10px}.path-station{display:grid;grid-template-columns:54px 1fr auto;align-items:center;gap:14px;width:100%;padding:14px 16px;text-align:left;border:2px solid transparent}.path-station.recommended{border-color:var(--purple);background:#f4f1ff}.path-station.done{background:#eafaf5}.path-node{display:grid;place-items:center;width:46px;height:46px;border-radius:15px;background:#eeeaf8;font-size:1.15rem;font-weight:950;color:var(--purple-dark)}.path-station.done .path-node{background:#c9f0e4;color:#176f59}.path-copy strong{display:block}.path-copy small{display:block;color:var(--muted);margin-top:3px}.path-stars{white-space:nowrap;color:#f4b000;font-weight:900}
+    .reward-explainer{padding:15px 18px}.reward-explainer summary{cursor:pointer;font-weight:900}.reward-explainer p{margin:10px 0 0;color:var(--muted);line-height:1.5}
+    .parent-link{display:block;margin:34px auto 0;border:0;background:transparent;color:var(--muted);text-decoration:underline;padding:10px}
+    .stage-badge{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:999px;background:#eeeaff;color:var(--purple-dark);font-weight:950;font-size:.78rem}.stage-badge[data-stage="boss"]{background:#fff1bd;color:#75540b}.adaptive-note{margin:10px 0;padding:10px 13px;border-radius:13px;background:#eafaf5;color:#176f59;font-weight:850}
+    .hobby-card{padding:20px}.hobby-card h3{margin:0 0 5px}.hobby-card p{margin:0;color:var(--muted)}.hobby-options{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.hobby-chip{position:relative}.hobby-chip input{position:absolute;opacity:0;pointer-events:none}.hobby-chip span{display:block;padding:9px 12px;border:2px solid var(--line);border-radius:999px;background:white;font-weight:850}.hobby-chip input:checked+span{border-color:var(--purple);background:#f1edff;color:var(--purple-dark)}
+    .nova-accessories{position:absolute;inset:0;pointer-events:none}.nova-accessory{position:absolute;font-size:1.7rem;filter:drop-shadow(0 3px 4px rgba(30,20,60,.2))}.nova-accessory.golden{filter:sepia(1) saturate(3) drop-shadow(0 0 5px #ffd45c)}.nova-accessory:nth-child(1){left:5%;top:8%}.nova-accessory:nth-child(2){right:0;top:2%}.nova-accessory:nth-child(3){left:0;bottom:4%}.nova-accessory:nth-child(4){right:2%;bottom:2%}.nova-accessory:nth-child(5){left:36%;top:-8%}.nova-accessory:nth-child(6){right:32%;bottom:-10%}
+    .reward-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:16px 0}.reward-pop{padding:11px 14px;border-radius:15px;background:#fff8dd;border:1px solid #f0dfa0;font-weight:900;animation:rewardPop .45s both;animation-delay:var(--delay,0s)}@keyframes rewardPop{from{opacity:0;transform:translateY(10px) scale(.92)}to{opacity:1;transform:none}}
+    @media(prefers-reduced-motion:reduce){.reward-pop{animation:none}}
+    .practice-days{display:grid;grid-template-columns:repeat(14,1fr);gap:5px;margin-top:10px}.practice-day{height:16px;border-radius:5px;background:#ece9f4}.practice-day.on{background:var(--mint)}.trend-list{display:grid;gap:8px;margin-top:10px}.trend-row{display:grid;grid-template-columns:90px 1fr 42px;gap:8px;align-items:center;font-size:.86rem}.trend-bar{height:9px;background:#ece9f4;border-radius:999px;overflow:hidden}.trend-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--purple),var(--blue));border-radius:inherit}
+    @media(max-width:1000px){.quick-grid{grid-template-columns:repeat(3,1fr)}.plan-grid{grid-template-columns:repeat(4,1fr)}}
+    @media(max-width:850px){.hero{grid-template-columns:1fr;padding:30px}.home-hero{grid-template-columns:1fr 120px}.home-hero .mascot-wrap{display:grid}.quick-grid{grid-template-columns:1fr 1fr}.world-grid{grid-template-columns:1fr 1fr}.lesson-shell{grid-template-columns:1fr}.lesson-side{position:static;display:grid;grid-template-columns:1fr 1fr;gap:0 18px}.lesson-side h3,.lesson-side p,.lesson-side .progress{grid-column:1/-1}.test-settings{grid-template-columns:1fr 1fr}.test-settings>div:first-child{grid-column:1/-1}.report-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){html,body,.app,.view,.lesson-shell,.lesson-main{max-width:100%;min-width:0}.app{width:min(100% - 18px,1120px);padding-top:6px;overflow-x:hidden}.topbar{padding-bottom:8px}.brand span:last-child{display:none}.brand-mark{width:38px;height:38px}.pill{padding:7px 9px;font-size:.76rem}.hero{padding:18px;border-radius:23px}.home-hero{min-height:134px;grid-template-columns:minmax(0,1fr) 78px;gap:8px}.home-hero h1{font-size:1.72rem;margin:6px 0}.home-hero p{font-size:.9rem;line-height:1.35}.home-hero .mascot{font-size:4rem}.today-card{margin-top:10px;padding:15px;display:block}.today-card h2{font-size:1.22rem;margin:3px 0}.today-card p{font-size:.88rem}.today-card .btn{width:100%;margin-top:10px;padding:11px}.hero-actions .btn{width:100%}.resume-card,.goal-head{align-items:flex-start;flex-direction:column}.resume-actions,.resume-actions .btn{width:100%}.quick-grid,.world-grid,.cheat-grid,.examples,.answer-grid,.readiness-grid,.plan-grid,.test-settings,.report-grid,.report-topics{grid-template-columns:1fr}.quick-grid{gap:8px}.quick{min-height:0;padding:12px 14px;display:grid;grid-template-columns:36px minmax(0,1fr);column-gap:10px;align-items:center}.quick .icon{grid-row:1/3;margin:0;font-size:1.55rem}.quick strong,.quick small{margin:0}.test-settings>div:first-child{grid-column:auto}.plan-day{min-height:0}.world p{min-height:0}.lesson-shell{display:block}.lesson-side{position:static;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 12px;padding:11px 14px;margin-bottom:9px}.lesson-side h3{grid-column:1;margin:0;font-size:.95rem}.lesson-side p{display:none}.lesson-side .side-stat{border:0;padding:0;font-size:.78rem;grid-column:2}.lesson-side .side-stat:nth-of-type(2){display:none}.lesson-side .progress{grid-column:1/-1;margin:2px 0 0;height:8px}.number-answer{display:grid;grid-template-columns:minmax(0,1fr) auto;width:100%;max-width:100%}.number-answer input{width:100%;min-width:0}.number-answer .btn{width:auto;max-width:132px;min-width:0;white-space:normal;line-height:1.1;flex:0 1 auto;padding:10px}.lesson-main{padding:17px}.question-text{font-size:1.35rem;overflow-wrap:anywhere}.work-step,.plain-board{min-width:0;overflow-wrap:anywhere}.intro-nav{align-items:stretch;flex-direction:column}.intro-nav>span{display:none}.intro-nav-actions{display:grid;grid-template-columns:1fr}.intro-nav .btn{width:100%}.path-station{grid-template-columns:46px minmax(0,1fr) auto;padding:12px}.path-node{width:40px;height:40px}.path-copy{min-width:0}.path-stars{font-size:.76rem}.practice-days{gap:3px}.nova-accessory{font-size:1.25rem}}
+    @media print{body{background:white}.app{width:100%;padding:0}.topbar,main>.view:not(#parentView),#parentView>*:not(#parentReport),.footer,.report-actions{display:none!important}#parentView{display:block!important}#parentReport{display:block!important;box-shadow:none;border:0;padding:0}.report-grid{grid-template-columns:repeat(4,1fr)}.parent-report:after{content:"Erstellt mit dem Terme-Abenteuer · Die Einschätzung ist eine Lernhilfe, keine Schulnote.";display:block;margin-top:28px;color:#5e6680;font-size:.8rem}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">x²</span><span id="brandTitle">Mein Terme-Abenteuer</span></div>
+      <div class="status-pills" aria-label="Dein Fortschritt">
+        <span class="pill">🔥 <span id="streak">Starte deine Serie</span></span>
+        <span class="pill">⭐ <span id="totalStars">0</span>/18</span>
+        <span id="jokerStatus" class="pill">🃏 Joker bereit</span>
+      </div>
+    </header>
+
+    <main>
+      <section id="homeView" class="view active">
+        <div class="hero home-hero">
+          <div><span class="eyebrow">Deine Terme-Mission</span><h1 id="homeGreeting">Hey!</h1><p id="novaMessage">Nova sucht gerade deine nächste Mission.</p></div>
+          <div class="mascot-wrap" aria-label="Nova mit deinen Sternen-Accessoires"><div class="mascot">🦊</div><div id="novaAccessories" class="nova-accessories"></div></div>
+        </div>
+
+        <section id="todayCard" class="today-card card" aria-live="polite">
+          <div><span class="today-label">Heute für dich</span><h2 id="todayTitle">Tag 1 · Grundlagen · ca. 15 Min</h2><p id="todayText">Wir starten ganz ruhig mit x und kleinen Text-Codes.</p></div>
+          <button id="todayCta" class="btn btn-primary" data-action="today">Mission starten →</button>
+        </section>
+
+        <section class="section" aria-labelledby="pathTitle">
+          <div class="section-head"><div><h2 id="pathTitle">Dein Lernweg</h2><p>Sieben Stationen. Du darfst jede antippen.</p></div></div>
+          <div id="planGrid" class="learning-path"></div>
+        </section>
+
+        <section class="section" aria-labelledby="quickTitle">
+          <div class="section-head"><div><h2 id="quickTitle">Mehr üben</h2><p>Alles, was du hier machst, zählt für deinen Lernweg.</p></div></div>
+          <div class="quick-grid">
+            <button class="quick card" data-action="free"><span class="icon">🎯</span><strong>Freies Training</strong><small>Gemischte Aufgaben</small></button>
+            <button class="quick card" data-action="blitz"><span class="icon">⚡</span><strong>10-Minuten-Blitz</strong><small>Üben gegen die Uhr</small></button>
+            <button class="quick card" data-action="mistakes"><span class="icon">🩹</span><strong>Revanche</strong><small id="mistakeCount">Noch keine Stolperstellen</small></button>
+            <button class="quick card" data-action="test"><span class="icon">🏁</span><strong>Probe-Schulaufgabe</strong><small>15 Aufgaben mit Auswertung</small></button>
+            <button class="quick card" data-action="open-cheat"><span class="icon">🧠</span><strong>Spickzettel</strong><small>Regeln schnell nachsehen</small></button>
+          </div>
+        </section>
+
+        <details class="section card reward-explainer"><summary>Was bedeutet das?</summary><p>Für jede Station einen Haken, für gute Runden Sterne, für besiegte Stolperstellen Fundstücke – und an jedem Tag, an dem du übst, wächst deine Flamme.</p></details>
+        <section class="section hobby-card card" aria-labelledby="hobbyTitle"><h3 id="hobbyTitle">💜 Mach die Geschichten zu deinen</h3><p>Wähle bis zu zwei Themen für Textaufgaben. Du kannst sie jederzeit ändern.</p><div id="hobbyOptions" class="hobby-options"></div></section>
+        <section id="collectionSection" class="section collection-card card" hidden aria-labelledby="collectionTitle"><h3 id="collectionTitle">🎒 Deine Fundstücke</h3><p>Gewonnene Revanches landen hier – jedes Fundstück zeigt, was du jetzt kannst.</p><div id="collectionGrid" class="collection-grid"></div></section>
+        <button class="parent-link" data-action="parents">Für Eltern</button>
+      </section>
+
+      <section id="parentView" class="view">
+        <div class="backline"><button id="parentHomeButton" class="btn btn-ghost btn-small" data-action="home">← Zur Übersicht</button><h2>Für Eltern</h2><span></span></div>
+        <section class="goal-card card" aria-labelledby="goalTitle"><div class="goal-head"><div><h3 id="goalTitle">🎯 Note-2-Kompass</h3><p id="goalRule">Zweimal mindestens 80 % bedeutet: Dieses Thema ist stabil grün.</p></div><div id="goalCount" class="goal-count">0 / 6 grün</div></div><div id="readinessGrid" class="readiness-grid"></div></section>
+        <section class="section test-settings card" aria-labelledby="testSettingsTitle"><div><h3 id="testSettingsTitle">🏁 Probe-Schulaufgabe einstellen</h3><p>Zeit, Zielwert und Name werden nur auf diesem Gerät gespeichert.</p></div><div class="setting"><label for="testMinutes">Arbeitszeit</label><select id="testMinutes"><option value="30">30 Minuten</option><option value="45">45 Minuten</option><option value="60">60 Minuten</option></select></div><div class="setting"><label for="grade2Percent">Notenziel</label><select id="grade2Percent"><option value="75">Note 2 ab 75 %</option><option value="80">Note 2 ab 80 %</option><option value="85">Note 2 ab 85 %</option></select></div><div class="setting name-setting"><label for="playerNameInput">Name des Kindes</label><div class="name-edit"><input id="playerNameInput" maxlength="30" autocomplete="off" placeholder="Name oder leer lassen"><button class="btn btn-secondary" data-action="save-name">Name speichern</button></div></div></section>
+        <section id="parentReport" class="section parent-report card" aria-labelledby="parentReportTitle"><h2 id="parentReportTitle">📋 Lernbericht</h2><p class="parent-report-intro" id="reportDate">Aktueller Lernstand</p><div id="reportGrid" class="report-grid"></div><div id="reportTrend"></div><div id="reportDays"></div><div id="reportTopics" class="report-topics"></div><p id="reportNote" class="report-note"></p><div class="report-actions"><button class="btn btn-ghost" data-action="print-report">Übersicht drucken</button> <button class="btn btn-ghost" data-action="export-progress">Fortschritt sichern</button> <button class="btn btn-ghost" data-action="import-progress">Fortschritt wiederherstellen</button><input id="importProgressInput" class="sr-only" type="file" accept="application/json,.json"> <button class="btn btn-danger btn-small" data-action="reset">Fortschritt zurücksetzen</button></div></section>
+      </section>
+
+      <section id="lessonView" class="view" aria-live="polite">
+        <div class="backline"><button class="btn btn-ghost btn-small" data-action="home">← Zur Übersicht</button><h2 id="modeTitle">Lernwelt</h2><span></span></div>
+        <div class="lesson-shell">
+          <aside class="lesson-side card">
+            <h3 id="sideTitle">Deine Mission</h3><p id="sideText">Lies die kurze Erklärung und probiere es direkt aus.</p>
+            <div class="side-stat"><span>Aufgabe&nbsp;</span><span id="questionCount">0 / 0</span></div>
+            <div class="side-stat"><span>Punkte</span><span id="correctCount">0</span></div>
+            <div class="progress" role="progressbar" aria-label="Fortschritt" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="lessonProgress"></span></div>
+          </aside>
+          <div id="lessonMain" class="lesson-main card"></div>
+        </div>
+      </section>
+
+      <section id="cheatView" class="view">
+        <div class="backline"><button class="btn btn-ghost btn-small" data-action="home">← Zur Übersicht</button><h2 id="cheatTitle">Dein einfacher Spickzettel</h2><span></span></div>
+        <div class="tip card" style="margin-bottom:14px"><div class="tip-icon">🦊</div><div><h3>So benutzt du ihn</h3><p>Suche eine Karte, die zu deiner Aufgabe passt. Schau dir das Beispiel an und mache mit deinen Zahlen genau dasselbe.</p></div></div>
+        <div class="cheat-grid">
+          <article class="cheat card"><h3>❓ Was bedeutet x?</h3><p><strong>x ist einfach eine Zahl, die wir noch nicht kennen.</strong> Steht eine Zahl davor, wird malgerechnet.</p><span class="math">3x bedeutet 3 · x</span></article>
+          <article class="cheat card"><h3>🧲 Was darf zusammen?</h3><p><strong>Gleiche Buchstaben darfst du zusammenzählen.</strong> Verschiedene Buchstaben bleiben getrennt.</p><span class="math">3x + 5x = 8x</span></article>
+          <article class="cheat card"><h3>📦 Zahl vor einer Klammer?</h3><p><strong>Nimm die Zahl mit jedem Teil in der Klammer mal.</strong> Wirklich mit jedem.</p><span class="math">3(x + 2) = 3x + 6</span></article>
+          <article class="cheat card"><h3>🌪️ Minus vor einer Klammer?</h3><p><strong>Alle Zeichen in der Klammer drehen sich um:</strong> Plus wird Minus und Minus wird Plus.</p><span class="math">−(x − 4) = −x + 4</span></article>
+          <article class="cheat card"><h3>🎟️ „Für x = 4“?</h3><p><strong>Ersetze jedes x durch eine 4.</strong> Danach rechnest du ganz normal aus.</p><span class="math">2x + 3 → 2 · 4 + 3 = 11</span></article>
+          <article class="cheat card"><h3>⚡ Was bedeutet x²?</h3><p><strong>x² bedeutet x · x.</strong> Bei x³ wird x dreimal miteinander malgenommen.</p><span class="math">x² · x³ = (x · x) · (x · x · x)<br>= x · x · x · x · x = x⁵</span></article>
+          <article class="cheat card"><h3>🚦 Was rechne ich zuerst?</h3><p><strong>1. Klammern · 2. Hochzahlen · 3. Mal/Geteilt · 4. Plus/Minus</strong></p><span class="math">Erst Klammer, dann weiter</span></article>
+          <article class="cheat card"><h3>🔎 Unsicher?</h3><p><strong>Probiere eine einfache Zahl für x aus, zum Beispiel x = 2.</strong> So kannst du deine Rechnung kontrollieren.</p><span class="math">2(x + 3) → 2 · (2 + 3) = 10</span></article>
+        </div>
+      </section>
+    </main>
+    <footer id="appFooter" class="footer">7. Klasse Realschule Bayern · Fortschritt bleibt auf diesem Gerät gespeichert</footer>
+  </div>
+  <div id="namePrompt" class="name-dialog" role="dialog" aria-modal="true" aria-labelledby="namePromptTitle" hidden><form id="nameForm" class="name-dialog-card card"><div class="nova" aria-hidden="true">🦊</div><h2 id="namePromptTitle">Nova fragt: Wie heißt du?</h2><p>Dann kann ich dein Abenteuer persönlich machen. Dein Name bleibt nur auf diesem Gerät.</p><label for="firstNameInput">Dein Name</label><input id="firstNameInput" maxlength="30" autocomplete="off" placeholder="Zum Beispiel Mia"><div class="name-dialog-actions"><button class="btn btn-primary" type="submit">Abenteuer starten</button><button class="btn btn-ghost" type="button" data-action="skip-name">Ohne Namen starten</button></div></form></div>
+  <div id="confetti" class="confetti" aria-hidden="true"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+  (() => {
+    'use strict';
+    const STORE = 'terme-abenteuer-v1';
+    const ACTIVE_STORE = 'terme-abenteuer-active-v1';
+    const LEGACY_STORE=['em','ily-terme-v1'].join('');
+    const LEGACY_ACTIVE_STORE=['em','ily-terme-active-v1'].join('');
+    const DATA_VERSION=5;
+    const worlds = [
+      {id:1,color:'#52a8ff',icon:'🛸',title:'Term-Detektivin',desc:'Variable, Zahl und Rechenzeichen sicher erkennen.',story:'Nova hat eine geheimnisvolle Kiste gefunden. Auf ihr steht x – denn noch weiß niemand, welche Zahl darin steckt. Genau so funktioniert eine Variable: Sie hält den Platz frei, bis wir die Zahl kennen.',rule:'Ein Term ist wie ein Rechenrezept: Er sagt, was gerechnet werden soll – aber er enthält kein Gleichheitszeichen.',steps:[['Kiste finden','Suche den Buchstaben. Er ist die Variable, also die geheimnisvolle Zahl.'],['Anzahl lesen','Die Zahl direkt vor der Kiste sagt, wie viele davon da sind. Das ist der Koeffizient.'],['Extras entdecken','Zahlen ohne Buchstaben sind feste Extras – sie verändern sich nicht.']],memory:'Buchstabe = Überraschungskiste · Zahl davor = Anzahl der Kisten',trap:'Eine Gleichung hat ein =. Ein Term nicht. 3x + 4 ist ein Term, 3x + 4 = 10 ist eine Gleichung.',examples:[['5a + 2','Fünf a-Kisten und zwei feste Extras. Variable: a · Koeffizient: 5'],['9 − 3y','Neun feste Punkte, davon gehen drei y-Kisten weg. Koeffizient von y: −3']]},
+      {id:2,color:'#ff7c9c',icon:'🎢',title:'Text-Code knacken',desc:'Aus Alltagssätzen passende Terme bauen.',story:'Heute ist Nova eine Übersetzungs-App – aber nicht für Englisch. Wir übersetzen Alltagssprache in Mathe-Code. Jeder Satzbaustein bekommt sein eigenes Rechenzeichen.',rule:'Baue den Term wie ein Sandwich: Beginne mit der Zahl oder Variable, die im Satz zuerst gerechnet wird, und lege die weiteren Teile passend dazu.',steps:[['Signalwort markieren','„doppelt“ heißt · 2, „mehr“ heißt +, „weniger“ heißt − und „Hälfte“ heißt : 2.'],['Grundgerüst bauen','Aus „das Dreifache einer Zahl“ wird zuerst 3x.'],['Rest anhängen','„… plus 4“ macht daraus 3x + 4. Fertig!']],memory:'Text langsam in Häppchen lesen – jedes Häppchen wird ein Stück vom Term.',trap:'„5 weniger als 3x“ bedeutet 3x − 5. Man startet bei 3x und nimmt 5 weg – nicht umgekehrt.',examples:[['Vier mehr als x','Starte bei x, packe 4 dazu → x + 4'],['Das Doppelte von x minus 3','Verdopple x und ziehe dann 3 ab → 2x − 3']]},
+      {id:3,color:'#45c9a5',icon:'🧲',title:'Term-Magnete',desc:'Gleichartige Teile finden und zusammenfassen.',story:'Auf Novas Magnetwand finden nur echte Teamkollegen zusammen: x klebt an x, y an y und reine Zahlen an reinen Zahlen. Verschiedene Teams lassen sich nicht vermischen.',rule:'Gleichartig bedeutet: Der Buchstabenteil sieht genau gleich aus. Dann rechnest du nur mit den Zahlen davor.',steps:[['Teams sortieren','Kreise gedanklich alle x-Terme, alle y-Terme und alle reinen Zahlen getrennt ein.'],['Zahlen verrechnen','Addiere oder subtrahiere nur die Zahlen vor demselben Buchstaben.'],['Buchstaben behalten','Der Buchstabenteil bleibt unverändert am Ergebnis hängen.']],memory:'Äpfel + Äpfel geht. Äpfel + Birnen bleibt Äpfel + Birnen.',trap:'3x + 5 kann nicht 8x werden. Die 5 hat kein x und gehört deshalb in ein anderes Team.',examples:[['3x + 5x','Drei x-Kisten plus fünf x-Kisten → 8x'],['7a + 2 − 4a + 3','a-Team: 7a − 4a = 3a · Zahlen-Team: 2 + 3 = 5 → 3a + 5']]},
+      {id:4,color:'#f6b93b',icon:'📦',title:'Klammer-Knacker',desc:'Plus-, Minus- und Mal-Klammern sicher öffnen.',story:'Die Zahl vor der Klammer ist ein Paketbote. Sie muss wirklich jedem Teil in der Klammer ein Paket bringen – niemand darf vergessen werden.',rule:'Beim Ausmultiplizieren wird alles in der Klammer mit der Zahl davor multipliziert. Ein Minus vor der Klammer dreht alle Vorzeichen um.',steps:[['Erstes Paket','Multipliziere die Zahl vor der Klammer mit dem ersten Teil.'],['Zweites Paket','Multipliziere sie auch mit dem zweiten Teil – samt Vorzeichen.'],['Klammer weg','Sind alle versorgt, darf die Klammer verschwinden.']],memory:'Die Zahl vor der Klammer besucht jeden in der Klammer.',trap:'Bei 3(x + 4) wird auch die 4 mit 3 multipliziert. 3x + 4 wäre also zu wenig.',examples:[['3(x + 4)','3 · x + 3 · 4 → 3x + 12'],['−(2x − 5)','Das Minus dreht beide Schilder um → −2x + 5']]},
+      {id:5,color:'#9b6ff0',icon:'🎟️',title:'Zahlen einsetzen',desc:'Variablen ersetzen und Werte ausrechnen.',story:'Jetzt zieht die Variable ihre Tarnkappe aus. Wenn x = 4 gilt, wird aus jeder x-Kiste eine echte 4. Danach ist es eine ganz normale Rechenaufgabe.',rule:'Tausche jeden Buchstaben gegen seinen Wert. Setze negative Zahlen sicherheitshalber in Klammern und rechne dann nach KlaPoPuStr.',steps:[['Tauschen','Ersetze jedes x durch die angegebene Zahl. Wirklich jedes!'],['Klammer schützen','Bei x = −3 schreibst du (−3), damit das Minus nicht verloren geht.'],['Richtig rechnen','Klammern, Potenzen, Punktrechnung, Strichrechnung – in dieser Reihenfolge.']],memory:'Erst einsetzen, dann ausrechnen. Nicht beides gleichzeitig im Kopf jonglieren.',trap:'(−3)² ist +9, denn minus mal minus ergibt plus. −3² ohne Klammer würde etwas anderes bedeuten.',examples:[['2x + 3 bei x = 4','2 · 4 + 3 → 8 + 3 → 11'],['x² − 2 bei x = −3','(−3)² − 2 → 9 − 2 → 7']]},
+      {id:6,color:'#ef6a5b',icon:'⚡',title:'Power-Mix',desc:'Potenzen und gemischte Terme meistern.',story:'Hochzahlen sind Novas Energiestapel. Treffen beim Multiplizieren zwei Stapel mit derselben Basis aufeinander, werden ihre Höhen zusammengezählt.',rule:'Gleiche Basis: Beim Multiplizieren Hochzahlen addieren, beim Teilen subtrahieren. Potenz hoch Potenz bedeutet: Hochzahlen multiplizieren.',steps:[['Basis prüfen','Nur wenn unten derselbe Buchstabe steht, greifen die Potenzregeln.'],['Zeichen ansehen','Mal → plus bei den Hochzahlen. Geteilt → minus. Hoch hoch → mal.'],['Zahlen extra rechnen','Zahlen vor dem x werden ganz normal multipliziert oder geteilt.']],memory:'Mal macht oben Plus · Geteilt macht oben Minus · Hoch hoch macht oben Mal.',trap:'x² + x³ ist nicht x⁵! Die Addier-Regel gilt nur bei einer Multiplikation: x² · x³ = x⁵.',examples:[['x² · x³','Gleiche Basis x, also 2 + 3 → x⁵'],['6x⁴ : 2x','Zahlen: 6 : 2 = 3 · Hochzahlen: 4 − 1 = 3 → 3x³']]}
+    ];
+    const simpleLessons={
+      1:{title:'Was bedeutet 3x + 2?',rows:[['x','eine Zahl, die wir noch nicht kennen'],['3x','3 mal diese Zahl'],['+ 2','danach noch 2 dazuzählen']],result:'Beispiel: x ist 4. Dann wird daraus 3 · 4 + 2 = 14.'},
+      2:{title:'Wie wird ein Satz zum Term?',rows:[['eine Zahl','dafür schreiben wir x'],['das Doppelte','2 mal x, also 2x'],['plus 3','am Ende 3 dazuzählen']],result:'„Das Doppelte einer Zahl plus 3“ wird zu 2x + 3.'},
+      3:{title:'Warum ist 3x + 5x gleich 8x?',rows:[['3x','3 gleiche x-Päckchen'],['5x','noch 5 gleiche x-Päckchen'],['3 + 5','zusammen sind es 8 Päckchen']],result:'Der Buchstabe bleibt: 3x + 5x = 8x.'},
+      4:{title:'Was bedeutet 2(x + 3)?',rows:[['2 · x','die 2 wird mit x multipliziert'],['2 · 3','die 2 wird auch mit 3 multipliziert'],['beides zusammen','2x + 6']],result:'Die Zahl vor der Klammer muss mit allem in der Klammer malgenommen werden.'},
+      5:{title:'Was heißt „für x = 4“?',rows:[['2x + 3','das ist unser Term'],['x durch 4 ersetzen','daraus wird 2 · 4 + 3'],['ausrechnen','8 + 3 = 11']],result:'Einsetzen heißt nur: Den Buchstaben durch die angegebene Zahl austauschen.'},
+      6:{title:'Was bedeutet x² · x³?',rows:[['x²','x · x'],['x³','x · x · x'],['alles zusammen','x · x · x · x · x']],result:'Wir zählen fünf x. Deshalb gilt x² · x³ = x⁵.'}
+    };
+    const planDays=[
+      {day:1,title:'Grundlagen',desc:'x verstehen und Texte übersetzen',worlds:[1,2]},
+      {day:2,title:'Zusammenfassen',desc:'Gleiche Termteile sicher verbinden',worlds:[3]},
+      {day:3,title:'Klammern',desc:'Ausmultiplizieren und Minusklammer',worlds:[4]},
+      {day:4,title:'Einsetzen',desc:'Zahlen einsetzen und ausrechnen',worlds:[5]},
+      {day:5,title:'Potenzen',desc:'Hochzahlen verstehen und anwenden',worlds:[6]},
+      {day:6,title:'Stolperstellen',desc:'Gespeicherte Fehler gezielt wiederholen',mode:'mistakes'},
+      {day:7,title:'Generalprobe',desc:'15 Aufgaben wie in der Schulaufgabe',mode:'test'}
+    ];
+    const TYPE_COLLECTIBLES={
+      'w1-variable':{emoji:'🔎',name:'Variablen-Spürnase',text:'Du findest den Platzhalter in einem Term.'},
+      'w1-coefficient':{emoji:'🔢',name:'Koeffizienten-Zähler',text:'Du erkennst die Zahl direkt vor der Variable.'},
+      'w1-term':{emoji:'🧩',name:'Term-Puzzle',text:'Du unterscheidest Terme von Gleichungen und Vergleichen.'},
+      'w2-multiple':{emoji:'🚀',name:'Vielfach-Rakete',text:'Du übersetzt das Mehrfache einer Zahl in einen Term.'},
+      'w2-less':{emoji:'🎯',name:'Weniger-Wegweiser',text:'Du setzt „weniger als“ in der richtigen Reihenfolge um.'},
+      'w2-cinema':{emoji:'🎬',name:'Kino-Kalkulator',text:'Du baust Terme aus Preisgeschichten.'},
+      'w2-half':{emoji:'🍰',name:'Halbierungs-Kuchen',text:'Du übersetzt „die Hälfte“ sicher in Geteilt.'},
+      'w2-stickers':{emoji:'🌟',name:'Sticker-Stern',text:'Du verbindest eine vorhandene Menge mit neuen Päckchen.'},
+      'w3-add':{emoji:'🤝',name:'Plus-Pärchen',text:'Du fasst gleichartige positive Termteile zusammen.'},
+      'w3-subtract':{emoji:'➖',name:'Abzieh-Anker',text:'Du subtrahierst gleichartige Termteile sicher.'},
+      'w3-mixed':{emoji:'🧺',name:'Sortier-Korb',text:'Du sortierst Variablenteile und reine Zahlen getrennt.'},
+      'w4-expand-plus':{emoji:'📦',name:'Plus-Paket',text:'Du verteilst eine Zahl auf alle Teile einer Plusklammer.'},
+      'w4-expand-minus':{emoji:'✂️',name:'Minus-Schere',text:'Du multiplizierst eine Minusklammer vollständig aus.'},
+      'w4-minus-bracket':{emoji:'🔄',name:'Vorzeichen-Wender',text:'Du drehst bei einer Minusklammer alle Vorzeichen um.'},
+      'w5-linear':{emoji:'🎟️',name:'Einsetz-Ticket',text:'Du setzt eine Zahl in einen linearen Term ein.'},
+      'w5-square':{emoji:'🟪',name:'Quadrat-Kachel',text:'Du setzt Zahlen sicher in einen Term mit Quadrat ein.'},
+      'w5-two-vars':{emoji:'⚖️',name:'Doppel-Waage',text:'Du setzt zwei verschiedene Variablen richtig ein.'},
+      'w6-multiply':{emoji:'⚡',name:'Potenz-Blitz',text:'Du addierst Hochzahlen beim Multiplizieren gleicher Basen.'},
+      'w6-divide':{emoji:'➗',name:'Teilungs-Kompass',text:'Du subtrahierst Hochzahlen beim Teilen gleicher Basen.'},
+      'w6-power-power':{emoji:'🗼',name:'Hochzahl-Turm',text:'Du multiplizierst Hochzahlen bei Potenz hoch Potenz.'},
+      'w6-equivalent':{emoji:'🪞',name:'Gleichwert-Spiegel',text:'Du erkennst zwei gleichwertige Terme.'},
+      'w1-boss':{emoji:'🕵️',name:'Tarnkappen-Detektor',text:'Du findest auch unsichtbare Koeffizienten.'},
+      'w2-boss':{emoji:'🧠',name:'Geschichten-Code',text:'Du übersetzt eine ganze Rechengeschichte in einen Term.'},
+      'w3-boss':{emoji:'🧮',name:'Team-Sortierer',text:'Du ordnest mehrere Termteile in einem Zug.'},
+      'w4-boss':{emoji:'🗝️',name:'Doppelklammer-Schlüssel',text:'Du öffnest eine Klammer und fasst danach zusammen.'},
+      'w5-boss':{emoji:'🥇',name:'Einsetz-Meisterstück',text:'Du setzt ein und beachtest Potenz und Vorzeichen.'},
+      'w6-boss':{emoji:'🌠',name:'Power-Komet',text:'Du verbindest Zahlenfaktoren und Potenzregeln.'}
+    };
+    const MINUS_BONUS={emoji:'🧲',name:'Minus-Magnet',text:'Du kannst jetzt Ergebnisse unter null bilden.'};
+    const STAGES=['warmup','training','pro','boss'];
+    const STAGE_LABELS={warmup:'Aufwärmen',training:'Training',pro:'Profi',boss:'Boss'};
+    const ACCESSORIES={1:{emoji:'🔍',name:'Detektivlupe'},2:{emoji:'🎧',name:'Code-Kopfhörer'},3:{emoji:'🎒',name:'Magnetrucksack'},4:{emoji:'🔑',name:'Klammer-Schlüssel'},5:{emoji:'🎟️',name:'Einsetz-Ticket'},6:{emoji:'⚡',name:'Power-Blitz'}};
+    const HOBBIES=['Tiere','Fußball','Musik','Tanzen','Gaming','Backen','Reiten'];
+    const STRATEGY_BASE={
+      'w1-variable':'Du hast den Buchstaben als Platzhalter erkannt.','w1-coefficient':'Du hast die Zahl direkt vor der Variable gefunden.','w1-term':'Du hast erkannt, dass ein Term kein Gleichheitszeichen hat.','w1-boss':'Du hast gesehen: Vor x versteckt sich der Koeffizient −1.',
+      'w2-multiple':'Du hast das Vielfache zuerst als Zahl mal x übersetzt.','w2-less':'Du hast „weniger als“ in der richtigen Reihenfolge gelesen.','w2-cinema':'Du hast gleiche Preise als Vielfaches zusammengefasst.','w2-half':'Du hast „die Hälfte“ als Teilen durch 2 übersetzt.','w2-stickers':'Du hast Päckchen mal Inhalt gerechnet und danach addiert.','w2-boss':'Du hast zuerst die Summe in der Klammer gebaut und sie dann verdreifacht.',
+      'w3-add':'Du hast nur die Zahlen vor gleichen Buchstaben addiert.','w3-subtract':'Du hast die Koeffizienten subtrahiert und den Buchstaben behalten.','w3-mixed':'Du hast Buchstabenteile und reine Zahlen getrennt sortiert.','w3-boss':'Du hast mehrere x-Teile und Zahlen in zwei Teams gesammelt.',
+      'w4-expand-plus':'Du hast die Zahl vor der Klammer mit jedem Teil multipliziert.','w4-expand-minus':'Du hast das Minus beim Ausmultiplizieren mitgenommen.','w4-minus-bracket':'Du hast beim Öffnen der Minusklammer beide Vorzeichen gedreht.','w4-boss':'Du hast erst ausmultipliziert und danach gleichartige x-Teile verbunden.',
+      'w5-linear':'Du hast die Variable ersetzt und danach in der richtigen Reihenfolge gerechnet.','w5-square':'Du hast eine negative Zahl vor dem Quadrieren in Klammern gesetzt.','w5-two-vars':'Du hast beide Variablen an der richtigen Stelle ersetzt.','w5-boss':'Du hast zuerst die Potenz berechnet und danach die übrigen Termteile.',
+      'w6-multiply':'Du hast die Hochzahlen addiert, weil hier malgerechnet wird.','w6-divide':'Du hast die Hochzahlen subtrahiert, weil hier geteilt wird.','w6-power-power':'Du hast die Hochzahlen bei Potenz hoch Potenz multipliziert.','w6-equivalent':'Du hast die Klammer geöffnet und gleichwertige Terme erkannt.','w6-boss':'Du hast die Zahlenfaktoren multipliziert und zugleich die Hochzahlen addiert.'
+    };
+
+    function normalizePlayerName(value){return String(value||'').replace(/\s+/g,' ').trim().slice(0,30)}
+    function possessiveName(value){const name=normalizePlayerName(value);return name?name+(/[sxzß]$/i.test(name)?'’':'s'):''}
+    function personalizedCopy(value=''){const name=normalizePlayerName(value),owner=possessiveName(name);return {name,brand:name?`${owner} Terme-Abenteuer`:'Mein Terme-Abenteuer',greeting:name?`Hey ${name}!`:'Hey!',collectionTitle:name?`🎒 ${owner} Fundstücke`:'🎒 Deine Fundstücke',footer:name?`Für ${name} · 7. Klasse Realschule Bayern · Fortschritt bleibt auf diesem Gerät gespeichert`:'7. Klasse Realschule Bayern · Fortschritt bleibt auf diesem Gerät gespeichert',parentBack:name?`← Zu ${name}`:'← Zur Übersicht',cheatTitle:name?`${owner} einfacher Spickzettel`:'Dein einfacher Spickzettel',storySubject:name||'Du',storyHas:name?`${name} hat`:'Du hast'}}
+    const state = loadState();
+    let session = null;
+    let savedSession = null;
+    const $ = s => document.querySelector(s);
+    const el = (tag, cls, text) => { const n=document.createElement(tag); if(cls)n.className=cls; if(text!==undefined)n.textContent=text; return n; };
+    const rand = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
+    const pick = a => a[Math.floor(Math.random()*a.length)];
+    const shuffle = a => [...a].sort(()=>Math.random()-.5);
+    const minus = s => String(s).replace(/-/g,'−');
+    const term = (c,v='x') => c===0?'0':c===1?v:c===-1?'−'+v:minus(c)+v;
+    const signed = (n,first=false) => first ? minus(n) : (n>=0?' + '+n:' − '+Math.abs(n));
+    const linearTerm = (coefficient,constant,variable='x') => coefficient===0?minus(constant):constant===0?term(coefficient,variable):term(coefficient,variable)+(constant>0?' + '+constant:' − '+Math.abs(constant));
+    const cleanDisplayText = value => String(value??'').replace(/-(?=\d)/g,'−').replace(/ {2,}/g,' ').trim();
+    function renderPersonalization(){const copy=personalizedCopy(state.playerName);document.title=copy.brand;const values={brandTitle:copy.brand,homeGreeting:copy.greeting,collectionTitle:copy.collectionTitle,appFooter:copy.footer,parentHomeButton:copy.parentBack,cheatTitle:copy.cheatTitle};Object.entries(values).forEach(([id,text])=>{const node=$('#'+id);if(node)node.textContent=text});const input=$('#playerNameInput');if(input&&document.activeElement!==input)input.value=copy.name}
+    function showNamePrompt(){const dialog=$('#namePrompt');if(!dialog)return;dialog.hidden=false;setTimeout(()=>$('#firstNameInput')?.focus(),50)}
+    function savePlayerName(value,{asked=true}={}){state.playerName=normalizePlayerName(value);state.nameAsked=asked;saveState();renderPersonalization()}
+    function strategyFor(templateId,stage='training'){const lead={warmup:'Beim Aufwärmen: ',training:'Im Training: ',pro:'Auf Profi-Stufe: ',boss:'Beim Boss: '}[stage]||'';return lead+(STRATEGY_BASE[templateId]||'Du hast den passenden Rechenweg sicher angewendet.')}
+    function praiseFor(q,result){if(result!=='hint')return q.strategy;const where={warmup:'beim Aufwärmen ',training:'im Training ',pro:'auf Profi-Stufe ',boss:'beim Boss '}[q.stage]||'',base=(STRATEGY_BASE[q.templateId]||'Du hast den passenden Rechenweg sicher angewendet.').replace(/^Du hast\s+/,'');return `Mit Novas Tipp hast du ${where}${base.charAt(0).toLowerCase()+base.slice(1)}`}
+    function withStage(q,stage='training'){q.stage=stage;q.boss=stage==='boss';q.strategy=strategyFor(q.templateId,stage);return q}
+    let dateProvider=()=>new Date();
+    function setDateProvider(fn){dateProvider=typeof fn==='function'?fn:()=>new Date()}
+    function localDateKey(value=dateProvider()){const d=value instanceof Date?value:new Date(value+'T12:00:00');return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}
+    function dateFromKey(key){return new Date(key+'T12:00:00')}
+    function dayDiff(a,b){return Math.round((dateFromKey(b)-dateFromKey(a))/86400000)}
+    function isoWeekKey(key){const d=dateFromKey(key),u=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())),day=u.getUTCDay()||7;u.setUTCDate(u.getUTCDate()+4-day);const y=new Date(Date.UTC(u.getUTCFullYear(),0,1));return u.getUTCFullYear()+'-W'+String(Math.ceil((((u-y)/86400000)+1)/7)).padStart(2,'0')}
+    function jokerReady(daily={},key=localDateKey()){const week=isoWeekKey(key);return !daily.jokerWeeks?.[week]}
+    function recordDailyAnswer(daily={},key=localDateKey()){
+      const next={counts:{...(daily.counts||{})},streak:Number(daily.streak)||0,lastQualified:daily.lastQualified||null,jokerWeeks:{...(daily.jokerWeeks||{})}};next.counts[key]=(next.counts[key]||0)+1;
+      if(next.counts[key]!==5)return next;if(!next.lastQualified){next.streak=1;next.lastQualified=key;return next}const gap=dayDiff(next.lastQualified,key);if(gap<=0)return next;if(gap===1)next.streak++;else if(gap===2){const missed=new Date(dateFromKey(next.lastQualified));missed.setDate(missed.getDate()+1);const week=isoWeekKey(localDateKey(missed));if(!next.jokerWeeks[week]){next.jokerWeeks[week]=true;next.streak++}else next.streak=1}else next.streak=1;next.lastQualified=key;return next;
+    }
+
+    function migrateCollectibles(oldCollectibles={},oldBonus={}){
+      const collectibles={},bonusCollectibles={...oldBonus},legacySeen=new Set();
+      Object.entries(oldCollectibles||{}).forEach(([key,item])=>{if(item?.name==='Minus-Magnet')bonusCollectibles.minusMagnet=MINUS_BONUS;if(TYPE_COLLECTIBLES[key]){collectibles[key]=TYPE_COLLECTIBLES[key];return}if(!item)return;const signature=item.name+'|'+item.emoji;if(legacySeen.has(signature)||item.name==='Minus-Magnet')return;legacySeen.add(signature);collectibles['legacy-'+Object.keys(collectibles).length]=item});
+      return {collectibles,bonusCollectibles};
+    }
+    function defaultState(){return {version:DATA_VERSION,playerName:'',nameAsked:false,stars:{},best:{},attempts:{},plan:{completed:[],activeDay:null},worldCompleted:{},explanationsSeen:{},daily:{counts:{},streak:0,lastQualified:null,jokerWeeks:{}},roundHistory:[],hobbies:[],testSettings:{minutes:45,grade2Percent:80},answered:0,correct:0,points:0,streak:0,mistakes:[],collectibles:{},bonusCollectibles:{}}}
+    function migrateState(raw={}){
+      const source=raw||{},loaded=Object.assign(defaultState(),source),migratedRewards=migrateCollectibles(loaded.collectibles,loaded.bonusCollectibles);loaded.version=DATA_VERSION;loaded.playerName=normalizePlayerName(loaded.playerName);loaded.nameAsked=Boolean(loaded.nameAsked||loaded.playerName);loaded.testSettings=Object.assign({minutes:45,grade2Percent:80},loaded.testSettings||{});loaded.plan=Object.assign({completed:[],activeDay:null},loaded.plan||{});loaded.worldCompleted={...(loaded.worldCompleted||{})};loaded.explanationsSeen={...(loaded.explanationsSeen||{})};loaded.daily=Object.assign({counts:{},streak:0,lastQualified:null,jokerWeeks:{}},loaded.daily||{});loaded.daily.counts={...(loaded.daily.counts||{})};loaded.daily.jokerWeeks={...(loaded.daily.jokerWeeks||{})};loaded.roundHistory=(Array.isArray(loaded.roundHistory)?loaded.roundHistory:[]).slice(-50);loaded.hobbies=(Array.isArray(loaded.hobbies)?loaded.hobbies.filter(h=>HOBBIES.includes(h)):[]).slice(0,2);loaded.collectibles=migratedRewards.collectibles;loaded.bonusCollectibles=migratedRewards.bonusCollectibles;loaded.points=Number.isFinite(Number(loaded.points))?Number(loaded.points):Number(loaded.correct||0);
+      if(Number(source.version||0)<4){worlds.forEach(w=>{if((loaded.attempts?.[w.id]||[]).length||(loaded.best?.[w.id]||0)>0||(loaded.stars?.[w.id]||0)>0)loaded.worldCompleted[w.id]=true});}
+      const seen=new Set();loaded.mistakes=(Array.isArray(loaded.mistakes)?loaded.mistakes:[]).map(old=>{
+        if(old?.templateId)return {templateId:old.templateId,world:old.world||Number(String(old.templateId).match(/^w(\d)/)?.[1])||1,traits:Array.isArray(old.traits)?old.traits:[],stage:old.stage||'training'};
+        const world=Number(old?.world)||1,meta=old?.prompt?templateMeta(world,old.prompt,old.answer):{templateId:`w${world}-legacy`,traits:[]};return {templateId:meta.templateId||`w${world}-legacy`,world,traits:meta.traits||[],stage:'training'};
+      }).filter(m=>{const key=m.templateId+'|'+m.traits.join(',')+'|'+m.stage;if(seen.has(key))return false;seen.add(key);return true});return loaded;
+    }
+    function loadState(){
+      try {const current=localStorage.getItem(STORE),legacy=current?null:localStorage.getItem(LEGACY_STORE),raw=current||legacy||'{}';if(legacy)localStorage.setItem(STORE,legacy);return migrateState(JSON.parse(raw)); }
+      catch(e){ return defaultState(); }
+    }
+    function saveState(){ localStorage.setItem(STORE,JSON.stringify(state)); updateHeader(); }
+    function exportProgressData(source=state){return JSON.stringify({app:'terme-abenteuer',version:DATA_VERSION,exportedAt:new Date().toISOString(),state:migrateState(JSON.parse(JSON.stringify(source||{})))},null,2)}
+    function importProgressData(text){const parsed=JSON.parse(text),legacyApp=['em','ilys-terme-abenteuer'].join('');if(parsed?.app&&!['terme-abenteuer',legacyApp].includes(parsed.app))throw new Error('wrong app');const raw=parsed?.state||parsed;if(!raw||typeof raw!=='object'||Array.isArray(raw))throw new Error('invalid state');return migrateState(raw)}
+    function downloadProgress(){const blob=new Blob([exportProgressData()],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=`terme-fortschritt-${localDateKey()}.json`;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),0);toast('Sicherung heruntergeladen ✓')}
+    function restoreProgress(restored){Object.keys(state).forEach(key=>delete state[key]);Object.assign(state,restored);saveState();clearActiveSession();renderWorlds();updateResumeUI();renderHobbies();renderCollection();renderParentReport();renderPersonalization()}
+    function loadActiveSession(){
+      try {
+        const current=localStorage.getItem(ACTIVE_STORE),legacy=current?null:localStorage.getItem(LEGACY_ACTIVE_STORE);if(legacy)localStorage.setItem(ACTIVE_STORE,legacy);const saved=JSON.parse(current||legacy||'null');if(!saved)return null;
+        if(!Array.isArray(saved.questions)||!saved.total||saved.index>=saved.total)throw new Error('invalid session');
+        saved.version=DATA_VERSION;saved.questions=saved.questions.map(q=>ensureQuestionMeta(q));saved.answers=Array.isArray(saved.answers)?saved.answers.map(a=>({...a,result:a.result||(a.ok?'self':'solution'),score:a.score??(a.ok?1:0)})):[];saved.questionStates=saved.questionStates||{};saved.workDone=saved.workDone||{};saved.points=Number.isFinite(Number(saved.points))?Number(saved.points):Number(saved.correct||0);saved.counts=saved.counts||countResults(saved.answers);return saved;
+      } catch(e){ localStorage.removeItem(ACTIVE_STORE);setTimeout(()=>toast('Der alte Zwischenstand war leider nicht mehr lesbar. Deine Sterne und Fortschritte sind aber sicher.'),0);return null; }
+    }
+    function persistSession(){
+      if(!session||session.completed)return;
+      const copy={...session}; delete copy.timer;
+      if(['blitz','test'].includes(session.mode))copy.remainingMs=Math.max(0,session.ends?session.ends-Date.now():(session.remainingMs||(session.mode==='test'?state.testSettings.minutes*60000:600000)));
+      localStorage.setItem(ACTIVE_STORE,JSON.stringify(copy)); savedSession=copy; updateResumeUI();
+    }
+    function clearActiveSession(){localStorage.removeItem(ACTIVE_STORE);savedSession=null;updateResumeUI()}
+    function pauseCurrentSession(){
+      if(!session)return;
+      if(session.timer)clearInterval(session.timer);
+      if(['blitz','test'].includes(session.mode))session.remainingMs=Math.max(0,(session.ends||Date.now())-Date.now());
+      delete session.timer;persistSession();
+    }
+    function updateResumeUI(){
+      const rec=todayRecommendation(state,savedSession),title=$('#todayTitle'),text=$('#todayText'),cta=$('#todayCta'),nova=$('#novaMessage');if(!title||!cta)return;
+      title.textContent=rec.title;text.textContent=rec.text;cta.textContent=rec.button;cta.dataset.todayKind=rec.kind;cta.dataset.todayValue=String(rec.value??'');
+      const done=(state.plan?.completed||[]).length,next=planDays.find(d=>!(state.plan?.completed||[]).includes(d.day));nova.textContent=savedSession?'Deine Mission wartet genau dort, wo du aufgehört hast.':done===0?'Ich zeige dir immer genau den nächsten kleinen Schritt.':done===7?'Alle Stationen geschafft – jetzt machen wir deine Superkraft stabil.':(state.daily?.lastQualified&&dayDiff(state.daily.lastQualified,localDateKey())>1?'Schön, dass du wieder da bist. Wir steigen ganz locker ein.':`Station ${next?.day||done+1} wartet: Heute ${next?.day===3?'knacken wir Klammern':next?.day===2?'sortieren wir Term-Magnete':next?.day===4?'setzen wir Zahlen ein':next?.day===5?'zünden wir den Power-Mix':next?.day===6?'holen wir uns Revanche':next?.day===7?'starten wir die Generalprobe':'knacken wir Text-Codes'}!`);
+    }
+    function completedStations(s=state){return [...new Set(s.plan?.completed||[])].sort((a,b)=>a-b)}
+    function syncStationProgress(s=state){const done=new Set(completedStations(s));if(s.worldCompleted?.[1]&&s.worldCompleted?.[2])done.add(1);if(s.worldCompleted?.[3])done.add(2);if(s.worldCompleted?.[4])done.add(3);if(s.worldCompleted?.[5])done.add(4);if(s.worldCompleted?.[6])done.add(5);s.plan=s.plan||{};s.plan.completed=[...done].sort((a,b)=>a-b);return s.plan.completed}
+    function weakestWorld(s=state){return [...worlds].sort((a,b)=>(s.stars?.[a.id]||0)-(s.stars?.[b.id]||0)||(s.best?.[a.id]||0)-(s.best?.[b.id]||0))[0].id}
+    function todayRecommendation(s=state,active=null){
+      if(active){const day=active.planDay||null,label=day?`Tag ${day}`:active.mode==='world'?`Welt ${active.world}`:active.title;return {kind:'resume',value:day,title:`Weitermachen: ${label}, Aufgabe ${Math.min(active.index+1,active.total)} von ${active.total}`,text:'Dein Zwischenstand ist sicher gespeichert.',button:'Weitermachen →'}}
+      const done=new Set(syncStationProgress(s)),next=planDays.find(d=>!done.has(d.day));if(next)return {kind:'station',value:next.day,title:`Tag ${next.day} · ${next.title} · ca. 15 Min`,text:next.desc,button:'Mission starten →'};
+      if((s.mistakes||[]).length)return {kind:'mistakes',value:null,title:`Revanche · ${(s.mistakes||[]).length} Stolperstellen`,text:'Hol dir die Fundstücke, die noch fehlen.',button:'Revanche starten →'};const wid=weakestWorld(s),w=worlds[wid-1];return {kind:'world',value:wid,title:`${w.icon} ${w.title} · Sterne sammeln`,text:'Hier kannst du deinen niedrigsten Sternestand verbessern.',button:'Welt trainieren →'};
+    }
+    function resumeSavedSession(){
+      const loaded=loadActiveSession();
+      if(!loaded){savedSession=null;updateResumeUI();toast('Kein gespeicherter Zwischenstand gefunden.');return}
+      session=loaded;
+      if(session.mode==='world'){
+        const w=worlds[session.world-1];$('#modeTitle').textContent=w.icon+' '+w.title;$('#sideTitle').textContent='Welt '+session.world+' von 6';$('#sideText').textContent='Dein Zwischenstand wurde geladen. Du machst genau dort weiter.';
+      }else{
+        $('#modeTitle').textContent=(session.mode==='test'?'🏁 ':session.mode==='blitz'?'⚡ ':session.mode==='mistakes'?'🩹 ':session.mode==='plan'?'📅 ':'🎯 ')+session.title;
+        $('#sideTitle').textContent=session.mode==='test'?'Wie in der Schulaufgabe':session.mode==='mistakes'?'Revanche':session.mode==='plan'?`Tag ${session.planDay} von 7`:'Deine Runde';$('#sideText').textContent='Dein Zwischenstand wurde geladen.';
+      }
+      if(['blitz','test'].includes(session.mode))session.ends=Date.now()+Math.max(1000,session.remainingMs||(session.mode==='test'?state.testSettings.minutes*60000:600000));
+      showView('lessonView');
+      if(session.intro)renderIntro(worlds[(session.introWorld||session.world)-1]);else renderQuestion();
+      if(['blitz','test'].includes(session.mode))startTimer();
+      toast('Zwischenstand geladen ✓');
+    }
+    function updateHeader(){
+      $('#totalStars').textContent=Object.values(state.stars).reduce((a,b)=>a+b,0);
+      $('#streak').textContent=state.daily?.streak?`${state.daily.streak} Tag${state.daily.streak===1?'':'e'}`:'Starte deine Serie';
+      const joker=$('#jokerStatus');if(joker)joker.textContent=jokerReady(state.daily)?'🃏 Joker bereit':'🃏 Joker diese Woche schon genutzt';
+      const m=$('#mistakeCount');if(m){const count=(state.mistakes||[]).length;m.textContent=count?`${count} Stolperstelle${count===1?' wartet':'n warten'}`:'Noch keine Stolperstellen'}
+      const minutes=$('#testMinutes'),threshold=$('#grade2Percent');if(minutes)minutes.value=String(state.testSettings.minutes);if(threshold)threshold.value=String(state.testSettings.grade2Percent);
+      const rule=$('#goalRule');if(rule)rule.textContent=`Zweimal mindestens ${state.testSettings.grade2Percent} % bedeutet: Dieses Thema ist stabil grün.`;
+      syncStationProgress();renderReadiness();renderPlan();renderParentReport();renderCollection();renderAccessories();renderHobbies();renderPersonalization();updateResumeUI();
+    }
+    function readinessFor(id){
+      const scores=(state.attempts?.[id]||[]).slice(-4),lastTwo=scores.slice(-2);
+      const goal=state.testSettings?.grade2Percent||80;
+      if(lastTwo.length===2&&lastTwo.every(n=>n>=goal))return {level:'green',label:'Stabil',detail:`zweimal ≥ ${goal} %`};
+      if(scores.some(n=>n>=goal)||(state.best?.[id]||0)>=60)return {level:'yellow',label:'Fast da',detail:`Bestwert ${state.best?.[id]||0} %`};
+      return {level:'red',label:'Noch üben',detail:scores.length?`Bestwert ${state.best?.[id]||0} %`:'noch keine Runde'};
+    }
+    function renderReadiness(){
+      const grid=$('#readinessGrid'),count=$('#goalCount');if(!grid||!count)return;
+      let green=0;grid.innerHTML=worlds.map(w=>{const r=readinessFor(w.id);if(r.level==='green')green++;return `<div class="readiness-item"><span class="signal ${r.level}" aria-hidden="true"></span><span><strong>${w.icon} ${w.title}</strong><small>${r.label} · ${r.detail}</small></span></div>`}).join('');count.textContent=`${green} / 6 grün`;
+    }
+    function renderPlan(){
+      const grid=$('#planGrid');if(!grid)return;const completed=completedStations(),recommended=planDays.find(d=>!completed.includes(d.day))?.day;
+      const stationStars=d=>d.worlds?.length?d.worlds.map(id=>'⭐'.repeat(state.stars?.[id]||0)+'☆'.repeat(3-(state.stars?.[id]||0))).join(' '):'';
+      grid.innerHTML=planDays.map(d=>`<button class="path-station card ${completed.includes(d.day)?'done':''} ${recommended===d.day?'recommended':''}" data-plan-day="${d.day}"><span class="path-node">${completed.includes(d.day)?'✓':d.day}</span><span class="path-copy"><strong>Tag ${d.day} · ${escapeHtml(d.title)}</strong><small>${escapeHtml(d.desc)}${recommended===d.day?' · heute empfohlen':''}</small></span><span class="path-stars">${stationStars(d)}</span></button>`).join('');
+    }
+    function renderCollection(){
+      const section=$('#collectionSection'),grid=$('#collectionGrid');if(!section||!grid)return;const title=$('#collectionTitle');if(title)title.textContent=personalizedCopy(state.playerName).collectionTitle;const seen=new Set(),items=[...Object.values(state.collectibles||{}),...Object.values(state.bonusCollectibles||{})].filter(item=>{const key=item.name+'|'+item.emoji;if(seen.has(key))return false;seen.add(key);return true});section.hidden=false;grid.innerHTML=items.length?items.map(item=>`<div class="collectible"><span class="emoji">${item.emoji}</span><span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.text)}</small></span></div>`).join(''):'<p>Noch leer – dein erstes Fundstück wartet in einer Revanche.</p>';
+    }
+    function accessoryState(stars={}){return Object.entries(ACCESSORIES).filter(([id])=>(stars[id]||0)>=2).map(([id,item])=>({...item,world:Number(id),golden:(stars[id]||0)>=3}))}
+    function renderAccessories(){const box=$('#novaAccessories');if(!box)return;const items=accessoryState(state.stars);box.innerHTML=items.map(item=>`<span class="nova-accessory ${item.golden?'golden':''}" title="${escapeAttr(item.name)}${item.golden?' · golden':''}">${item.emoji}</span>`).join('');box.parentElement?.setAttribute('aria-label',items.length?`Nova trägt ${items.map(i=>(i.golden?'goldene ':'')+i.name).join(', ')}`:'Nova wartet auf ihr erstes Sterne-Accessoire')}
+    function renderHobbies(){const box=$('#hobbyOptions');if(!box)return;box.innerHTML=HOBBIES.map((h,i)=>`<label class="hobby-chip"><input type="checkbox" data-hobby="${escapeAttr(h)}" ${(state.hobbies||[]).includes(h)?'checked':''}><span>${['🐾','⚽','🎵','💃','🎮','🧁','🐴'][i]} ${h}</span></label>`).join('')}
+    function renderParentReport(){
+      const grid=$('#reportGrid'),topics=$('#reportTopics'),note=$('#reportNote'),trend=$('#reportTrend'),days=$('#reportDays');if(!grid||!topics||!note)return;
+      const done=completedStations().length,accuracy=state.answered?Math.round(state.correct/state.answered*100):0,green=worlds.filter(w=>readinessFor(w.id).level==='green').length,history=(state.roundHistory||[]).slice(-5);
+      const mistakeCounts={};(state.mistakes||[]).forEach(q=>{mistakeCounts[q.world]=(mistakeCounts[q.world]||0)+1});
+      const rank={red:0,yellow:1,green:2};
+      const next=[...worlds].sort((a,b)=>rank[readinessFor(a.id).level]-rank[readinessFor(b.id).level]||(mistakeCounts[b.id]||0)-(mistakeCounts[a.id]||0))[0];
+      $('#reportDate').textContent='Stand: '+new Intl.DateTimeFormat('de-DE',{dateStyle:'long'}).format(new Date());
+      grid.innerHTML=`<div class="report-stat"><strong>${done}/7</strong><span>Stationen geschafft</span></div><div class="report-stat"><strong>${state.answered||0}</strong><span>Aufgaben beantwortet</span></div><div class="report-stat"><strong>${green}/6</strong><span>Themen stabil grün</span></div><div class="report-stat"><strong style="font-size:1rem">${accuracy} %</strong><span>Gesamtquote (nur Überblick)</span></div>`;
+      if(trend)trend.innerHTML=`<h3>Entwicklung der letzten 5 Runden</h3><div class="trend-list">${history.length?history.map(r=>`<div class="trend-row"><span>${escapeHtml(r.modeLabel||r.mode)}</span><span class="trend-bar"><i style="width:${r.percent}%"></i></span><strong>${r.percent} %</strong></div>`).join(''):'<p>Noch keine abgeschlossene Runde.</p>'}</div>`;
+      if(days){const keys=[];const now=dateFromKey(localDateKey());for(let i=13;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);keys.push(localDateKey(d))}days.innerHTML=`<h3>Übungstage der letzten 14 Tage</h3><div class="practice-days" aria-label="Übungstage">${keys.map(k=>`<span class="practice-day ${(state.daily?.counts?.[k]||0)>=5?'on':''}" title="${k}: ${state.daily?.counts?.[k]||0} Aufgaben"></span>`).join('')}</div>`}
+      topics.innerHTML=worlds.map(w=>{const r=readinessFor(w.id);return `<div class="report-topic"><span>${w.icon} ${escapeHtml(w.title)}</span><span>${r.level==='green'?'Grün':r.level==='yellow'?'Gelb':'Rot'} · ${escapeHtml(r.detail)}</span></div>`}).join('');
+      const common=Object.entries(mistakeCounts).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([id,n])=>`${worlds[Number(id)-1].title} (${n})`).join(', ');
+      const improved=worlds.filter(w=>{const a=state.attempts?.[w.id]||[];return a.length>1&&a[a.length-1]>a[a.length-2]}).map(w=>w.title).slice(0,2);
+      note.innerHTML=`<strong>Zuletzt verbessert:</strong> ${improved.length?escapeHtml(improved.join(', ')):'Noch kein Vergleich möglich.'}<br><strong>Aktuelle Stolperstellen:</strong> ${common?escapeHtml(common):'keine gespeichert'}<br><strong>Nächster sinnvoller Schritt:</strong> ${next.icon} ${escapeHtml(next.title)} trainieren.`;
+    }
+    function showView(id){ document.querySelectorAll('.view').forEach(v=>v.classList.remove('active')); $('#'+id).classList.add('active'); window.scrollTo({top:0,behavior:'smooth'}); }
+    function toast(msg){ const t=$('#toast'); t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2100); }
+    function confetti(){
+      const c=$('#confetti'), colors=['#7257e8','#ff6fa9','#45c9a5','#ffd45c','#52a8ff']; c.innerHTML='';
+      for(let i=0;i<38;i++){const p=el('i');p.style.left=rand(2,98)+'%';p.style.background=pick(colors);p.style.animationDelay=(Math.random()*.5)+'s';p.style.transform='rotate('+rand(0,180)+'deg)';c.appendChild(p)}
+      setTimeout(()=>c.innerHTML='',2400);
+    }
+    function renderWorlds(){
+      const grid=$('#worldGrid');if(!grid)return;grid.innerHTML='';
+      worlds.forEach(w=>{
+        const card=el('article','world card');card.style.setProperty('--world',w.color);
+        const stars=state.stars[w.id]||0, best=state.best[w.id]||0;
+        card.innerHTML=`<div class="world-top"><span class="world-number">${w.id}</span><span class="stars" aria-label="${stars} von 3 Sternen">${[1,2,3].map(n=>`<span class="${n<=stars?'on':''}">★</span>`).join('')}</span></div><h3>${w.icon} ${w.title}</h3><p>${w.desc}</p><div class="world-progress"><span style="width:${best}%"></span></div><button class="btn" data-world="${w.id}">${best?'Nochmal trainieren':'Welt starten'}</button>`;
+        grid.appendChild(card);
+      });
+    }
+
+    function templateMeta(world,prompt,answer){
+      let id=`w${world}-general`;
+      if(world===1)id=/Variable/.test(prompt)?'w1-variable':/Koeffizient/.test(prompt)?'w1-coefficient':'w1-term';
+      if(world===2)id=/weniger/.test(prompt)?'w2-less':/Kinoticket/.test(prompt)?'w2-cinema':/Hälfte/.test(prompt)?'w2-half':/Sticker/.test(prompt)?'w2-stickers':'w2-multiple';
+      if(world===3)id=(prompt.match(/[+−]/g)||[]).length>1?'w3-mixed':/ − /.test(prompt)?'w3-subtract':'w3-add';
+      if(world===4)id=/Minusklammer/.test(prompt)?'w4-minus-bracket':/x −/.test(prompt)?'w4-expand-minus':'w4-expand-plus';
+      if(world===5)id=/x²/.test(prompt)?'w5-square':/2y/.test(prompt)?'w5-two-vars':'w5-linear';
+      if(world===6)id=/Welche Terme/.test(prompt)?'w6-equivalent':/ : /.test(prompt)?'w6-divide':/^Vereinfache.*\(x/.test(prompt)?'w6-power-power':'w6-multiply';
+      const traits=[];if((world===3||world===5)&&(/^[-−–—]/.test(String(answer).trim())||Number(answer)<0))traits.push('negativeResult');if(/\^|[⁰¹²³⁴⁵⁶⁷⁸⁹]/.test(String(answer)))traits.push('power');return {templateId:id,traits};
+    }
+    function ensureQuestionMeta(q){if(!q)return q;const meta=templateMeta(Number(q.world)||1,q.prompt||'',q.answer);q.templateId=q.templateId||meta.templateId;q.traits=Array.isArray(q.traits)?q.traits:meta.traits;q.firstStep=q.firstStep||q.work?.label||q.hint||'Schau dir an, welcher Rechenschritt zuerst kommt.';q.stage=q.stage||'training';q.boss=Boolean(q.boss||q.stage==='boss');q.strategy=q.strategy||strategyFor(q.templateId,q.stage);['prompt','hint','firstStep','why','strategy'].forEach(field=>{if(q[field]!==undefined)q[field]=cleanDisplayText(q[field])});if(q.work)q.work={...q.work,label:cleanDisplayText(q.work.label)};if(Array.isArray(q.options))q.options=q.options.map(cleanDisplayText);q.key=q.key||q.templateId+'|'+q.stage+'|'+q.prompt+'|'+q.answer;return q}
+    function qChoice(prompt,answer,wrong,hint,why,world,firstStep=null){
+      const opts=shuffle([...new Set([answer,...wrong])].slice(0,4));
+      return ensureQuestionMeta({type:'choice',prompt,answer,options:opts,hint,why,firstStep:firstStep||hint,world,key:world+'|'+prompt+'|'+answer});
+    }
+    function qNumber(prompt,answer,hint,why,world,firstStep=null){return ensureQuestionMeta({type:'number',prompt,answer:String(answer),hint,why,firstStep:firstStep||hint,world,key:world+'|'+prompt+'|'+answer});}
+    function qTerm(prompt,answer,hint,why,world,work=null,firstStep=null){return ensureQuestionMeta({type:'term',prompt,answer:String(answer),hint,why,firstStep:firstStep||work?.label||hint,world,work,key:world+'|'+prompt+'|'+answer});}
+
+    function makeQuestion(world){
+      if(world===1){
+        const v=pick(['x','a','y','m']), c=rand(2,9), n=rand(1,12), kind=rand(1,3);
+        if(kind===1)return qChoice(`Welche Variable steckt im Term ${c}${v} + ${n}?`,v,['x',String(c),String(n)],'Die Variable ist der Buchstabe – also der Platzhalter.','Der Buchstabe '+v+' kann verschiedene Zahlen vertreten.',1);
+        if(kind===2)return qChoice(`Wie heißt der Koeffizient von ${c}${v} − ${n}?`,String(c),[v,String(n),String(-c)],'Der Koeffizient ist die Zahl direkt vor der Variable.','Vor '+v+' steht die Zahl '+c+'. Sie ist der Koeffizient.',1);
+        return qChoice(`Welcher Ausdruck mit ${v} ist ein Term?`,`${c}${v} + ${n}`,[`${v} = ${n}`,`${c} < ${n}`,'x?'],'Ein Term hat kein Gleichheits- oder Vergleichszeichen.','Nur '+c+v+' + '+n+' ist ein vollständiger Rechenausdruck ohne =, < oder >.',1);
+      }
+      if(world===2){
+        const v='x',a=rand(2,8),b=rand(2,12), kind=rand(1,5);
+        if(kind===1)return qChoice(`Welcher Term bedeutet: „Das ${a}-Fache einer Zahl plus ${b}“?`,`${a}x + ${b}`,[`${a} + x + ${b}`,`${a}(x + ${b})`,`x + ${a*b}`],'„Das a-Fache“ bedeutet a · x. Danach kommt plus b.','Aus „das '+a+'-Fache“ wird '+a+'x; anschließend werden '+b+' addiert.',2);
+        if(kind===2)return qChoice(`Welcher Term bedeutet: „${b} weniger als das ${a}-Fache von x“?`,`${a}x − ${b}`,[`${b} − ${a}x`,`${a}(x − ${b})`,`x − ${a+b}`],'Starte mit dem '+a+'-Fachen: '+a+'x. Davon gehen '+b+' weg.','„'+b+' weniger“ bedeutet: von '+a+'x die Zahl '+b+' abziehen.',2);
+        if(kind===3)return qChoice(`Ein Kinoticket kostet x Euro. Popcorn kostet ${b} Euro. Term für ${a} Tickets und Popcorn?`,`${a}x + ${b}`,[`${a}(x + ${b})`,`x + ${a+b}`,`${b}x + ${a}`],'Jedes der '+a+' Tickets kostet x. Popcorn kommt einmal dazu.','Die Tickets kosten zusammen '+a+'x Euro, dazu kommen '+b+' Euro.',2);
+        if(kind===4)return qChoice(`Welcher Term bedeutet: „Die Hälfte von x, danach plus ${b}“?`,`x : 2 + ${b}`,[`2x + ${b}`,`x : (2 + ${b})`,`(${b} − x) : 2`],'„Hälfte“ heißt durch 2 teilen.','Zuerst x : 2, anschließend '+b+' addieren.',2);
+        return qChoice(`${personalizedCopy(state.playerName).storyHas} x Sticker und bekommt ${a} Päckchen mit je ${b} Stickern. Welcher Term passt?`,`x + ${a*b}`,[`${a}x + ${b}`,`${b}x + ${a}`,`${a}(x + ${b})`],'Die neuen Sticker sind Päckchen mal Inhalt.','Die '+a+' Päckchen enthalten '+a+' · '+b+' = '+(a*b)+' Sticker. Diese kommen zu x dazu.',2);
+      }
+      if(world===3){
+        const v=pick(['x','a','y']),a=rand(2,9),b=rand(2,9),c=rand(1,7),kind=rand(1,3);
+        if(kind===1){const ans=a+b;return qTerm(`Vereinfache und tippe den Term ein: ${a}${v} + ${b}${v}`,term(ans,v),'Beide Teile haben denselben Buchstaben. Addiere nur die Zahlen davor.',''+a+' + '+b+' = '+ans+', der Variablenteil '+v+' bleibt.',3,{label:`Rechne zuerst nur die Zahlen: ${a} + ${b} = ?`,answer:String(ans),type:'number'},`${a} + ${b} = ${ans} hast du schon. Jetzt kommt das ${v} hinter die ${ans}.`)}
+        if(kind===2){const ans=a-b,step=ans===0?`${a} − ${b} = 0. Es bleibt kein ${v}-Päckchen übrig.`:ans===1?`${a} − ${b} = 1 hast du schon. Eine 1 direkt vor einer Variable schreibt man nicht mit.`:ans===-1?`${a} − ${b} = −1 hast du schon. Bei −1 schreibt man vor einer Variable nur das Minus.`:`${a} − ${b} = ${minus(ans)} hast du schon. Jetzt kommt das ${v} hinter die ${minus(ans)}.`;return qTerm(`Vereinfache und tippe den Term ein: ${a}${v} − ${b}${v}`,term(ans,v),'Ziehe die Koeffizienten voneinander ab.',`${a} − ${b} = ${minus(ans)}. Daher lautet der Term ${term(ans,v)}.`,3,{label:`Rechne zuerst nur die Zahlen: ${a} − ${b} = ?`,answer:String(ans),type:'number'},step)}
+        const constant=b+c;return qTerm(`Vereinfache und tippe den Term ein: ${a}${v} + ${b} + ${c}${v} + ${c}`,`${term(a+c,v)} + ${constant}`,'Sammle zuerst alle '+v+'-Teile und dann alle reinen Zahlen.',''+a+v+' + '+c+v+' = '+term(a+c,v)+' und '+b+' + '+c+' = '+constant+'.',3,{label:`Wie viele ${v}-Teile sind es zusammen? ${a} + ${c} = ?`,answer:String(a+c),type:'number'},`${a} + ${c} = ${a+c} ist der ${v}-Teil. Rechne nun die reinen Zahlen: ${b} + ${c} = ${constant}; schreibe beide Teile mit Plus dazwischen.`);
+      }
+      if(world===4){
+        const a=rand(2,7),b=rand(1,9),kind=rand(1,3);
+        if(kind===1)return qTerm(`Löse die Klammer auf und tippe den Term ein: ${a}(x + ${b})`,`${a}x + ${a*b}`,'Multipliziere '+a+' mit x und auch mit '+b+'.',''+a+' · x = '+a+'x und '+a+' · '+b+' = '+(a*b)+'.',4,{label:`Berechne zuerst das Zahlen-Paket: ${a} · ${b} = ?`,answer:String(a*b),type:'number'},`${a} · x = ${a}x und ${a} · ${b} = ${a*b}. Verbinde beide Teile mit einem Plus.`);
+        if(kind===2)return qTerm(`Löse die Klammer auf und tippe den Term ein: ${a}(x − ${b})`,`${a}x − ${a*b}`,'Auch das Minus bleibt beim Multiplizieren erhalten.',''+a+' · x = '+a+'x und '+a+' · (−'+b+') = −'+(a*b)+'.',4,{label:`Berechne zuerst das Zahlen-Paket: ${a} · ${b} = ?`,answer:String(a*b),type:'number'},`${a} · x = ${a}x und ${a} · (−${b}) = −${a*b}. Verbinde beide Teile mit einem Minus.`);
+        return qTerm(`Löse die Minusklammer auf und tippe den Term ein: −(${a}x − ${b})`,`−${a}x + ${b}`,'Ein Minus vor der Klammer kehrt beide Vorzeichen um.','Aus +'+a+'x wird −'+a+'x und aus −'+b+' wird +'+b+'.',4,{label:`Welches Vorzeichen bekommt die ${b}? Tippe + oder −.`,answer:'+',type:'text'},`Das Minus macht aus ${a}x den Teil −${a}x und aus −${b} die Zahl +${b}. Schreibe beide Teile nacheinander.`);
+      }
+      if(world===5){
+        const x=rand(-5,6),a=rand(2,6),b=rand(-7,8),kind=rand(1,3);
+        if(kind===1){const ans=a*x+b,product=a*x;return qNumber(`Berechne ${a}x ${b>=0?'+ '+b:'− '+Math.abs(b)} für x = ${minus(x)}.`,ans,'Setze für x die Zahl '+minus(x)+' ein: '+a+' · ('+minus(x)+') …',''+a+' · ('+minus(x)+') '+signed(b)+' = '+ans+'.',5,`${a} · (${minus(x)}) = ${minus(product)}. Jetzt noch ${b>=0?'+ '+b:'− '+Math.abs(b)} rechnen.`)}
+        if(kind===2){const ans=x*x+b,square=x*x;return qNumber(`Berechne x² ${b>=0?'+ '+b:'− '+Math.abs(b)} für x = ${minus(x)}.`,ans,'Bei einer negativen Zahl gilt: ('+minus(x)+')² ist positiv.','('+minus(x)+')² = '+(x*x)+', danach '+signed(b)+' ergibt '+ans+'.',5,`(${minus(x)})² = ${square}. Jetzt noch ${b>=0?'+ '+b:'− '+Math.abs(b)} rechnen.`)}
+        const y=rand(1,5),ans=a*x+2*y,left=a*x,right=2*y;return qNumber(`Berechne ${a}x + 2y für x = ${minus(x)} und y = ${y}.`,ans,'Setze beide Werte einzeln ein.',''+a+' · ('+minus(x)+') + 2 · '+y+' = '+ans+'.',5,`${a} · (${minus(x)}) = ${minus(left)} und 2 · ${y} = ${right}. Addiere nun diese beiden Ergebnisse.`);
+      }
+      const a=rand(2,6),b=rand(1,4),c=rand(1,4),kind=rand(1,4);
+      if(kind===1){const hidden=b===1||c===1?` Die unsichtbare Hochzahl bei x ist 1.`:'';return qTerm(`Vereinfache und tippe den Term ein: ${powerTerm('x',b)} · ${powerTerm('x',c)}`,powerTerm('x',b+c),`Gleiche Basis und Mal: Hochzahlen addieren.${hidden}`,`${b} + ${c} = ${b+c}.`,6,{label:`Addiere zuerst die Hochzahlen: ${b} + ${c} = ?`,answer:String(b+c),type:'number'},`${hidden.trim()} ${b} + ${c} = ${b+c} ist die neue Hochzahl, die Basis bleibt x. Tippe x, dann [hoch], dann ${b+c}.`.trim())}
+      if(kind===2){const hi=b+c,hidden=b===1||c===1?' Eine nicht geschriebene Hochzahl ist 1.':'';return qTerm(`Vereinfache und tippe den Term ein: ${a*2}${powerTerm('x',hi)} : 2${powerTerm('x',b)}`,`${a}${powerTerm('x',c)}`,`Teile die Zahlen und subtrahiere die Hochzahlen.${hidden}`,`${a*2} : 2 = ${a} und ${hi} − ${b} = ${c}.`,6,{label:`Subtrahiere zuerst die Hochzahlen: ${hi} − ${b} = ?`,answer:String(c),type:'number'},`${hidden.trim()} ${a*2} : 2 = ${a}; ${hi} − ${b} = ${c} ist die neue Hochzahl.${c===1?` Weil die Hochzahl 1 unsichtbar bleibt, tippst du die ${a} und direkt dahinter x.`:` Tippe ${a}, x, [hoch], dann ${c}.`}`.trim())}
+      if(kind===3){const inner=rand(2,4);return qTerm(`Vereinfache und tippe den Term ein: (${powerTerm('x',inner)})${sup(2)}`,powerTerm('x',inner*2),'Potenz hoch Potenz: Hochzahlen multiplizieren.',`${inner} · 2 = ${inner*2}.`,6,{label:`Multipliziere zuerst die Hochzahlen: ${inner} · 2 = ?`,answer:String(inner*2),type:'number'},`${inner} · 2 = ${inner*2} ist die neue Hochzahl, die Basis bleibt x. Tippe x, dann [hoch], dann ${inner*2}.`)}
+      return qChoice(`Welche Terme mit der Zahl ${a} sind gleichwertig?`,`2(x + ${a}) und 2x + ${2*a}`,[`2(x + ${a}) und 2x + ${a}`,`x + ${a} und ${a}x`,`2x + ${a} und ${2+a}x`],'Löse beim ersten Ausdruck die Klammer auf.','2 wird mit x und mit '+a+' multipliziert: 2x + '+(2*a)+'.',6);
+    }
+    const HOBBY_WORLDS={Tiere:{place:'Im Tierheim',unit:'Futterbeutel',plural:'Futterbeutel',extra:'eine Spielmaus',things:'Tierbilder'},Fußball:{place:'Beim Fußballtraining',unit:'Trainingsball',plural:'Trainingsbälle',extra:'eine Trinkflasche',things:'Sammelkarten'},Musik:{place:'Im Musikstudio',unit:'Song',plural:'Songs',extra:'ein Notenheft',things:'Playlist-Songs'},Tanzen:{place:'Beim Tanztraining',unit:'Tanzband',plural:'Tanzbänder',extra:'eine Haarspange',things:'Glitzersterne'},Gaming:{place:'Im Spiel',unit:'Level-Pass',plural:'Level-Pässe',extra:'ein Bonus-Item',things:'Münzen'},Backen:{place:'In der Backstube',unit:'Muffin',plural:'Muffins',extra:'eine Zuckerschrift',things:'Streusel'},Reiten:{place:'Auf dem Reiterhof',unit:'Hufeisen-Anhänger',plural:'Hufeisen-Anhänger',extra:'eine Bürste',things:'Pferdesticker'}};
+    function hobbyLead(hobbies=[]){return HOBBY_WORLDS[hobbies[0]]?.place||''}
+    function applyHobbyTheme(q,hobbies=[],playerName=state?.playerName||''){if(!q||q.world!==2||!hobbies.length)return q;const copy={...q},theme=HOBBY_WORLDS[hobbies[0]],p=q.prompt,storyHas=personalizedCopy(playerName).storyHas;copy.neutralPrompt=q.prompt;
+      if(q.templateId==='w2-cinema'){const b=Number(p.match(/Popcorn kostet (\d+)/)?.[1]||2),a=Number(p.match(/für (\d+) Tickets/)?.[1]||2);copy.prompt=`${theme.place} kostet ein ${theme.unit} x Euro und ${theme.extra} ${b} Euro. Welcher Term passt für ${a} ${a===1?theme.unit:theme.plural} und das Extra?`}
+      else if(q.templateId==='w2-stickers'){const m=p.match(/bekommt (\d+) Päckchen mit je (\d+)/),a=Number(m?.[1]||2),b=Number(m?.[2]||3);copy.prompt=`${theme.place}: ${storyHas} x ${theme.things} und bekommt ${a} Päckchen mit je ${b} dazu. Welcher Term passt?`}
+      copy.prompt=cleanDisplayText(copy.prompt);copy.key=q.key+'|hobby:'+hobbies.join(',');return copy}
+    function makeWarmupQuestion(world,hobbies=[]){
+      if(world===5){const x=rand(1,4),a=rand(2,4),b=rand(1,4),ans=a*x+b;return withStage(ensureQuestionMeta({type:'number',prompt:`Berechne ${a}x + ${b} für x = ${x}.`,answer:String(ans),hint:`Setze ${x} für x ein.`,why:`${a} · ${x} + ${b} = ${ans}.`,firstStep:`${a} · ${x} = ${a*x}. Jetzt noch + ${b}.`,world:5,templateId:'w5-linear',traits:[],work:{label:`Rechne zuerst ${a} · ${x} = ?`,answer:String(a*x),type:'number'}}),'warmup')}
+      let q;for(let i=0;i<120;i++){q=makeQuestion(world);const answer=String(q.answer),numbers=(q.prompt.match(/\d+/g)||[]).map(Number);if(!/^−|-/.test(answer)&&!q.traits?.includes('negativeResult')&&numbers.every(n=>n<=9)&&(world<3||q.work))break}return applyHobbyTheme(withStage(q,'warmup'),hobbies)
+    }
+    function makeProQuestion(world,hobbies=[]){let q;
+      if(world===1){const n=rand(2,9),c=rand(2,6);q=qChoice(`Wie heißt der Koeffizient von −${c}x + ${n}?`,`−${c}`,[String(c),'x',String(n)],'Das Minus gehört zur Zahl direkt vor x.',`Vor x steht −${c}.`,1)}
+      if(world===2){const a=rand(2,5),b=rand(2,8),c=rand(1,6),delta=c-b,answer=linearTerm(a,delta);q=qChoice(`Welcher Term bedeutet: „Das ${a}-Fache einer Zahl, danach ${b} weniger und ${c} mehr“?`,answer,[`${a}(x − ${b+c})`,`${b} − ${a}x + ${c}`,`${a}x + ${b+c}`],'Baue zuerst das Vielfache und verarbeite dann beide Änderungen.',`${a}x − ${b} + ${c} = ${answer}.`,2)}
+      if(world===3){const a=rand(2,6),b=rand(a+1,a+6),c=rand(1,5),coef=a-b+1,constant=3-c;q=qTerm(`Vereinfache und tippe den Term ein: ${a}x + 3 − ${b}x − ${c} + x`,linearTerm(coef,constant),'Sortiere zuerst alle x-Teile und dann alle Zahlen.',`${a} − ${b} + 1 = ${minus(coef)}; 3 − ${c} = ${minus(constant)}.`,3,null,`Die x-Zahlen ergeben ${minus(coef)}. Rechne getrennt noch 3 − ${c}.`)}
+      if(world===4){const a=rand(2,5),b=rand(2,7),c=rand(1,a-1),coef=a-c;q=qTerm(`Vereinfache: ${a}(x − ${b}) − ${c}x`,`${term(coef)} − ${a*b}`,'Öffne zuerst die Klammer und fasse danach die x-Teile zusammen.',`${a}x − ${a*b} − ${c}x = ${term(coef)} − ${a*b}.`,4,null,`Aus der Klammer wird ${a}x − ${a*b}. Danach fasst du die x-Teile zusammen.`)}
+      if(world===5){const x=-rand(2,5),a=rand(2,5),b=rand(1,6),ans=a*x-b;q=qNumber(`Berechne ${a}x − ${b} für x = ${minus(x)}.`,ans,'Setze die negative Zahl in Klammern ein.',`${a} · (${minus(x)}) − ${b} = ${minus(ans)}.`,5,`${a} · (${minus(x)}) = ${minus(a*x)}. Jetzt noch − ${b}.`)}
+      if(world===6){const a=rand(2,5),b=rand(2,4),c=rand(2,4);q=qTerm(`Vereinfache: ${a}x${sup(b)} · 2x${sup(c)}`,`${a*2}x${sup(b+c)}`,'Multipliziere die Zahlen und addiere die Hochzahlen.',`${a} · 2 = ${a*2}; ${b} + ${c} = ${b+c}.`,6,null,`${a} · 2 = ${a*2}; die Hochzahlen ${b} und ${c} werden addiert.`)}
+      return applyHobbyTheme(withStage(q,'pro'),hobbies)
+    }
+    function makeBossQuestion(world,hobbies=[]){let q;
+      if(world===1){const n=rand(4,12);q=qChoice(`Boss: Wie heißt der Koeffizient von x im Term ${n} − x?`,'−1',['1',String(n),'x'],'Vor x steht unsichtbar eine 1; das Minus gehört dazu.',`${n} − x bedeutet ${n} − 1x. Der Koeffizient ist −1.`,1);q.bossWork={label:'Welche unsichtbare Zahl steht direkt vor x?',answer:'1',type:'number'}}
+      if(world===2){const a=rand(2,4),b=rand(2,6),setting=hobbies.length?`${hobbyLead(hobbies)}: `:'';q=qTerm(`Boss: ${setting}Das ${a}-Fache der Summe aus x und ${b}. Tippe den vereinfachten Term ein.`,`${a}x + ${a*b}`,`Baue zuerst x + ${b} und nimm diese ganze Summe ${a}-mal.`,`${a}(x + ${b}) = ${a}x + ${a*b}.`,2,null,`${a} · x = ${a}x und ${a} · ${b} = ${a*b}. Verbinde beide Teile.`);q.mathExpression=`${a}(x + ${b})`;q.bossWork={label:`Rechne zuerst das Zahlen-Paket: ${a} · ${b} = ?`,answer:String(a*b),type:'number'}}
+      if(world===3){const a=rand(5,8),b=rand(2,4),c=rand(1,2),n=rand(2,6),m=rand(n+1,n+6),coef=a-b-c,constant=n-m;q=qTerm(`Boss: Vereinfache ${a}x + ${n} − ${b}x − ${m} − ${c}x.`,linearTerm(coef,constant),'Sammle x-Teile und Zahlen getrennt.',`${a}x − ${b}x − ${c}x = ${term(coef)}; ${n} − ${m} = ${minus(constant)}.`,3,null,`Bei den x-Teilen rechnest du ${a} − ${b} − ${c}. Bei den Zahlen ${n} − ${m}.`);q.bossWork={label:`Rechne zuerst die x-Zahlen: ${a} − ${b} − ${c} = ?`,answer:String(coef),type:'number'}}
+      if(world===4){const a=rand(2,4),inside=rand(2,4),b=rand(2,6),c=rand(1,a*inside-1),coef=a*inside-c;q=qTerm(`Boss: Vereinfache ${a}(${inside}x + ${b}) − ${c}x.`,`${term(coef)} + ${a*b}`,'Multipliziere zuerst die Klammer aus, dann fasse x zusammen.',`${a*inside}x + ${a*b} − ${c}x = ${term(coef)} + ${a*b}.`,4,null,`${a} · ${inside}x = ${a*inside}x und ${a} · ${b} = ${a*b}. Danach kommt noch −${c}x.`);q.bossWork={label:`Rechne zuerst den x-Faktor aus der Klammer: ${a} · ${inside} = ?`,answer:String(a*inside),type:'number'}}
+      if(world===5){const x=-rand(2,4),a=rand(2,4),b=rand(2,5),ans=a*x*x-b*x;q=qNumber(`Boss: Berechne ${a}x² − ${b}x für x = ${minus(x)}.`,ans,'Setze die negative Zahl in Klammern ein und rechne die Potenz zuerst.',`${a} · (${minus(x)})² − ${b} · (${minus(x)}) = ${ans}.`,5,`(${minus(x)})² = ${x*x}. Rechne nun ${a} · ${x*x} und −${b} · (${minus(x)}).`);q.bossWork={label:`Berechne zuerst die Potenz: (${minus(x)})² = ?`,answer:String(x*x),type:'number'}}
+      if(world===6){const a=rand(2,4),c=rand(2,4),b=rand(2,3),d=rand(2,4);q=qTerm(`Boss: Vereinfache ${a}x${sup(b)} · ${c}x${sup(d)}.`,`${a*c}x${sup(b+d)}`,'Multipliziere die Zahlen; addiere bei gleicher Basis die Hochzahlen.',`${a} · ${c} = ${a*c} und ${b} + ${d} = ${b+d}.`,6,null,`${a} · ${c} = ${a*c} und ${b} + ${d} = ${b+d}. Setze Zahl, Basis und Hochzahl zusammen.`);q.bossWork={label:`Addiere zuerst die Hochzahlen: ${b} + ${d} = ?`,answer:String(b+d),type:'number'}}
+      q.templateId=`w${world}-boss`;q.traits=[...(q.traits||[]),'boss'];delete q.work;return applyHobbyTheme(withStage(q,'boss'),hobbies)
+    }
+    function makeLeveledQuestion(world,stage='training',hobbies=[]){if(stage==='warmup')return makeWarmupQuestion(world,hobbies);if(stage==='pro')return makeProQuestion(world,hobbies);if(stage==='boss')return makeBossQuestion(world,hobbies);return applyHobbyTheme(withStage(makeQuestion(world),'training'),hobbies)}
+    function stagePlan(total){if(total===12)return [...Array(3).fill('warmup'),...Array(5).fill('training'),...Array(3).fill('pro'),'boss'];if(total===6)return ['warmup','warmup','training','training','pro','boss'];return Array.from({length:total},(_,i)=>i===total-1?'boss':i<Math.ceil(total*.4)?'training':'pro')}
+    function buildWorldQuestions(world,total,hobbies=[]){return stagePlan(total).map(stage=>{const q=makeLeveledQuestion(world,stage,hobbies);q.plannedStage=stage;return q})}
+    function makeQuestionFromTemplate(templateId,traits=[],easier=false,oldPrompt=''){
+      const world=Number(String(templateId).match(/^w(\d)/)?.[1])||1,wanted=Array.isArray(traits)?traits:[],stage=wanted.includes('boss')||templateId.endsWith('-boss')?'boss':'training',magnitude=s=>(String(s).match(/\d+/g)||[]).reduce((sum,n)=>sum+Number(n),0),oldSize=magnitude(oldPrompt)||Infinity;let fallback=null,best=null;
+      for(let i=0;i<300;i++){const q=stage==='boss'?makeBossQuestion(world,state?.hobbies||[]):makeQuestion(world);fallback=q;const matches=templateId.endsWith('-legacy')||q.templateId===templateId&&wanted.every(t=>q.traits.includes(t));if(!matches||q.prompt===oldPrompt)continue;if(!easier)return withStage(q,stage);if(!best||magnitude(q.prompt)<magnitude(best.prompt))best=q;if(magnitude(q.prompt)<=oldSize)return withStage(q,stage)}
+      return withStage(best||fallback||makeQuestion(world),stage);
+    }
+    function sup(n){return String(n).split('').map(d=>({'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'}[d])).join('')}
+    function powerTerm(base,power){return Number(power)===1?base:base+sup(power)}
+    function xTiles(n,label='x'){return Array.from({length:n},()=>`<span class="x-tile">${label}</span>`).join('')}
+    function nTiles(n){return Array.from({length:n},()=>'<span class="n-tile">1</span>').join('')}
+    function visualFor(id){
+      if(id===1)return `<div class="term-visual" aria-label="Drei x-Kästchen und zwei Einer"><div class="tile-row">${xTiles(3)}<span class="tile-sign">+</span>${nTiles(2)}</div><div class="tile-caption">3x + 2 bedeutet: drei x-Kästchen und zwei Einer</div></div>`;
+      if(id===2)return `<div class="term-visual" aria-label="Zwei x-Kästchen und drei Einer"><div class="tile-row">${xTiles(2)}<span class="tile-sign">+</span>${nTiles(3)}</div><div class="tile-caption">„Das Doppelte von x plus 3“ wird sichtbar zu 2x + 3</div></div>`;
+      if(id===3)return `<div class="term-visual" aria-label="Drei x plus fünf x ergeben acht x"><div class="tile-row">${xTiles(3)}<span class="tile-sign">+</span>${xTiles(5)}</div><div class="tile-caption">Alle sind x-Kästchen: zusammen sind es acht</div><div class="tile-row" style="margin-top:10px"><span class="tile-sign">↓</span>${xTiles(8)}</div></div>`;
+      if(id===4)return `<div class="term-visual" aria-label="Die Klammer x plus drei wird zweimal genommen"><div class="tile-row"><span class="tile-sign">2 ×</span><span class="x-tile">x</span><span class="tile-sign">+</span>${nTiles(3)}</div><div class="tile-caption">Die ganze Gruppe wird zweimal genommen</div><div class="tile-row" style="margin-top:10px">${xTiles(2)}<span class="tile-sign">+</span>${nTiles(6)}</div></div>`;
+      if(id===5)return `<div class="term-visual" aria-label="x wird durch vier ersetzt"><div class="tile-row"><span class="x-tile">x</span><span class="tile-sign">wird zu</span><span class="n-tile">4</span></div><div class="tile-caption">2x + 3 wird dadurch zu 2 · 4 + 3 = 11</div></div>`;
+      return `<div class="term-visual" aria-label="Zwei x mal drei x ergeben fünf x-Faktoren"><div class="tile-row">${xTiles(2)}<span class="tile-sign">·</span>${xTiles(3)}</div><div class="tile-caption">Zähle alle x: x · x · x · x · x = x⁵</div></div>`;
+    }
+
+    function startWorld(id){
+      const w=worlds[id-1];
+      session={version:DATA_VERSION,mode:'world',world:id,introWorld:id,title:w.title,total:12,index:0,correct:0,points:0,counts:{self:0,hint:0,solution:0},selfRun:0,solutionRun:0,stageShift:0,questions:buildWorldQuestions(id,12,state.hobbies),answers:[],questionStates:{},workDone:{},intro:true};
+      persistSession();
+      $('#modeTitle').textContent=w.icon+' '+w.title;$('#sideTitle').textContent='Welt '+id+' von 6';$('#sideText').textContent='Erst kurz verstehen, dann 12 abwechslungsreiche Aufgaben lösen.';
+      showView('lessonView');renderIntro(w);
+    }
+    function startMixed(mode,planDay=null){
+      const cfg=mode==='test'?{title:'Probe-Schulaufgabe',total:15}:mode==='blitz'?{title:'10-Minuten-Blitz',total:30}:{title:'Freies Training',total:20};
+      const timedMs=mode==='blitz'?600000:mode==='test'?(state.testSettings.minutes||45)*60000:null;
+      session={version:DATA_VERSION,mode,world:0,title:cfg.title,total:cfg.total,index:0,correct:0,points:0,counts:{self:0,hint:0,solution:0},selfRun:0,solutionRun:0,stageShift:0,questions:[],answers:[],questionStates:{},workDone:{},intro:false,started:Date.now(),ends:timedMs?Date.now()+timedMs:null,planDay};
+      if(mode==='test'){for(let i=0;i<cfg.total-2;i++)session.questions.push(makeLeveledQuestion((i%6)+1,i%3===0?'training':'pro',state.hobbies));session.questions=shuffle(session.questions);session.questions.push(makeBossQuestion(rand(1,6),state.hobbies),makeBossQuestion(rand(1,6),state.hobbies))}else{for(let i=0;i<cfg.total;i++)session.questions.push(makeLeveledQuestion((i%6)+1,i%2?'pro':'training',state.hobbies));session.questions=shuffle(session.questions)}
+      if(mode!=='test'&&state.mistakes.length){
+        const repeats=shuffle(state.mistakes).slice(0,Math.min(4,state.mistakes.length,Math.floor(cfg.total/4)));
+        repeats.forEach((m,i)=>{const q=m.stage==='boss'?makeBossQuestion(m.world,state.hobbies):makeLeveledQuestion(m.world,m.stage||'training',state.hobbies);if(!String(m.templateId).endsWith('-boss')){const same=makeQuestionFromTemplate(m.templateId,m.traits,false,'');Object.assign(q,same,{stage:m.stage||same.stage||'training',strategy:strategyFor(m.templateId,m.stage||'training')});if(q.stage==='pro')delete q.work}q.revenge=true;q.revengeKey=mistakeKey(m);session.questions[(i+1)*3]=q});
+      }
+      persistSession();
+      $('#modeTitle').textContent=(mode==='test'?'🏁 ':mode==='blitz'?'⚡ ':'🎯 ')+cfg.title;
+      $('#sideTitle').textContent=mode==='test'?'Wie in der Schulaufgabe':'Deine Runde';
+      $('#sideText').textContent=mode==='test'?`15 gemischte Aufgaben in ${state.testSettings.minutes} Minuten. Hinweise sind hier ausgeschaltet.`:'Du bekommst sofort Rückmeldung und kannst Hinweise nutzen.';
+      showView('lessonView');renderQuestion();
+      if(['blitz','test'].includes(mode))startTimer();
+    }
+    function startMistakeTraining(planDay=null){
+      const targets=shuffle(state.mistakes||[]).slice(0,5);if(!targets.length){if(planDay){startPlanDayFallbackSix();return}toast('Noch keine Stolperstellen – das ist doch gut!');return}
+      const questions=targets.map(m=>{const q=m.stage==='boss'?makeBossQuestion(m.world,state.hobbies):makeLeveledQuestion(m.world,m.stage||'training',state.hobbies);if(!String(m.templateId).endsWith('-boss')){const same=makeQuestionFromTemplate(m.templateId,m.traits,false,'');Object.assign(q,same,{stage:m.stage||same.stage||'training',strategy:strategyFor(m.templateId,m.stage||'training')});if(q.stage==='pro')delete q.work}q.revenge=true;q.revengeKey=mistakeKey(m);return q});
+      session={version:DATA_VERSION,mode:'mistakes',world:0,title:'Revanche',total:questions.length,index:0,correct:0,points:0,counts:{self:0,hint:0,solution:0},selfRun:0,questions,answers:[],questionStates:{},workDone:{},intro:false,started:Date.now(),ends:null,planDay};
+      persistSession();$('#modeTitle').textContent='🩹 Revanche';$('#sideTitle').textContent='Stolperstellen besiegen';$('#sideText').textContent='Gleiche Aufgabenart, neue Zahlen: Jetzt holst du dir dein Fundstück.';showView('lessonView');renderQuestion();
+    }
+    function startPlanDayFallbackSix(){
+      const targets=worlds.map(w=>({id:w.id,stars:state.stars?.[w.id]||0,best:state.best?.[w.id]||0})).sort((a,b)=>a.stars-b.stars||a.best-b.best).slice(0,2).map(x=>x.id),questions=[];for(let i=0;i<8;i++)questions.push(makeLeveledQuestion(targets[i%2],i%2?'pro':'training',state.hobbies));
+      session={version:DATA_VERSION,mode:'plan',world:0,title:'Tag 6: Stärke-Runde',total:8,index:0,correct:0,points:0,counts:{self:0,hint:0,solution:0},selfRun:0,solutionRun:0,stageShift:0,questions:shuffle(questions),answers:[],questionStates:{},workDone:{},intro:false,started:Date.now(),ends:null,planDay:6};persistSession();$('#modeTitle').textContent='📅 Tag 6: Stärke-Runde';$('#sideTitle').textContent='Tag 6 von 7';$('#sideText').textContent='Keine offenen Stolperstellen: acht Aufgaben aus deinen zwei schwächsten Welten.';showView('lessonView');renderQuestion();
+    }
+    function startPlanDay(dayNumber){
+      const d=planDays.find(x=>x.day===dayNumber);if(!d)return;
+      state.plan=state.plan||{completed:[],activeDay:null};state.plan.activeDay=dayNumber;saveState();
+      if(d.mode==='test'){startMixed('test',dayNumber);return}
+      if(d.mode==='mistakes'&&(state.mistakes||[]).length){startMistakeTraining(dayNumber);return}
+      let targets=d.worlds;
+      if(d.mode==='mistakes')targets=worlds.map(w=>({id:w.id,stars:state.stars?.[w.id]||0,best:state.best?.[w.id]||0})).sort((a,b)=>a.stars-b.stars||a.best-b.best).slice(0,2).map(x=>x.id);
+      const total=d.mode==='mistakes'?8:12,questions=[];
+      if(d.day===1){questions.push(...buildWorldQuestions(1,6,state.hobbies),...buildWorldQuestions(2,6,state.hobbies))}else if(d.mode==='mistakes'){for(let i=0;i<total;i++)questions.push(makeLeveledQuestion(targets[i%targets.length],i%2?'pro':'training',state.hobbies))}else questions.push(...buildWorldQuestions(targets[0],total,state.hobbies));
+      const introWorld=d.worlds?.[0]||null;
+      session={version:DATA_VERSION,mode:'plan',world:0,introWorld,title:`Tag ${d.day}: ${d.title}`,total,index:0,correct:0,points:0,counts:{self:0,hint:0,solution:0},selfRun:0,solutionRun:0,stageShift:0,questions:d.day===1?questions:questions,answers:[],questionStates:{},workDone:{},intro:Boolean(introWorld),introSwitches:d.day===1?{6:2}:{},started:Date.now(),ends:null,planDay:d.day};
+      persistSession();$('#modeTitle').textContent='📅 '+session.title;$('#sideTitle').textContent=`Tag ${d.day} von 7`;$('#sideText').textContent=d.desc+' · etwa 15 Minuten.';showView('lessonView');if(session.intro)renderIntro(worlds[introWorld-1]);else renderQuestion();
+    }
+    function renderIntro(w){
+      updateSessionUI();
+      const s=simpleLessons[w.id],step=Math.min(2,session.introStep||0);
+      let body='';
+      if(step===0)body=`<span class="question-kicker">Ganz langsam · nur eine Sache</span><h2>${w.icon} ${w.title}</h2><div class="plain-board"><h3>${s.title}</h3>${visualFor(w.id)}${s.rows.map(r=>`<div class="plain-row"><span class="plain-symbol math">${r[0]}</span><span class="plain-arrow">→</span><span class="plain-meaning">${r[1]}</span></div>`).join('')}<div class="plain-result">✓ ${s.result}</div></div><p>Mehr musst du für diesen ersten Schritt noch nicht wissen.</p>`;
+      if(step===1)body=`<span class="question-kicker">So gehst du vor</span><h2>Drei kleine Schritte</h2><div class="step-list">${w.steps.map((r,i)=>`<div class="step"><span class="step-num">${i+1}</span><span><strong>${r[0]}</strong>${r[1]}</span></div>`).join('')}</div><div class="memory">🧠 Kurz merken: ${w.memory}</div>`;
+      if(step===2)body=`<span class="question-kicker">Einmal gemeinsam ansehen</span><h2>So sieht es fertig aus</h2><div class="examples">${w.examples.map((e,i)=>`<div class="example"><small>${i===0?'Beispiel 1':'Beispiel 2'}</small><span class="math">${e[0]}</span><p>${e[1]}</p></div>`).join('')}</div><div class="trap"><strong>🚧 Häufiger Fehler</strong><br>${w.trap}</div><p>Du musst es noch nicht auswendig können. Bei den Aufgaben gibt Nova dir jederzeit einen Tipp.</p>`;
+      const returnButton=session.returnToQuestion?'<button class="btn btn-primary" data-action="return-question">Zurück zur Aufgabe →</button>':'';
+      const skipButton=!session.returnToQuestion&&state.explanationsSeen?.[w.id]?'<button class="btn btn-ghost" data-action="begin-questions">Kenn ich schon – direkt üben</button>':'';
+      const forwardButton=step<2?'<button class="btn btn-secondary" data-action="intro-next">Nächster Mini-Schritt →</button>':session.returnToQuestion?'':'<button class="btn btn-primary" data-action="begin-questions">Jetzt langsam üben →</button>';
+      $('#lessonMain').innerHTML=`<div class="explain intro-stage"><div class="intro-dots" aria-label="Erklärung ${step+1} von 3"><span class="${step>=0?'on':''}"></span><span class="${step>=1?'on':''}"></span><span class="${step>=2?'on':''}"></span></div>${body}<div class="intro-nav">${step>0?'<button class="btn btn-ghost" data-action="intro-back">← Zurück</button>':'<span></span>'}<div class="intro-nav-actions">${skipButton}${forwardButton}${returnButton}</div></div></div>`;
+    }
+    function questionState(){session.questionStates=session.questionStates||{};return session.questionStates[session.index]||(session.questionStates[session.index]=createAttemptState())}
+    function previewText(q,value,type=q.type){if(!String(value||'').trim())return 'Ich lese: …';const parsed=parseUserInput(q,value,type);return parsed.status==='format'?'Das kann ich noch nicht lesen.':'Ich lese: '+parsed.display}
+    function inputWidget({id,formId,type,q,value='',disabled=false,buttonText='Prüfen'}){
+      const cfg=fieldConfig(type,variableFor(q)),preview=previewText(q,value,type),format=preview.startsWith('Das');
+      const keys=cfg.keys.map(key=>`<button type="button" data-insert-target="${id}" data-insert="${key==='hoch'?'^':key}" ${disabled?'disabled':''}>${key==='hoch'?'hoch':key}</button>`).join('');
+      return `<div class="input-stack"><div id="${id}Preview" class="input-preview ${format?'format':''}" aria-live="polite">${escapeHtml(preview)}</div><div class="keybar" aria-label="Mathe-Tasten">${keys}</div><form id="${formId}" class="number-answer"><label class="sr-only" for="${id}">${cfg.placeholder}</label><input id="${id}" inputmode="${cfg.inputmode}" autocomplete="off" placeholder="${cfg.placeholder}" value="${escapeAttr(value)}" ${disabled?'disabled':''}><button class="btn btn-primary" type="submit" ${disabled?'disabled':''}>${buttonText}</button></form></div>`;
+    }
+    function renderQuestion(){
+      if(!session||session.index>=session.total){finishSession();return}
+      const q=ensureQuestionMeta(session.questions[session.index]),qs=questionState();updateSessionUI();const strict=session.mode==='test',hintAllowed=!strict,needsWork=Boolean(q.work&&!strict),workDone=Boolean(session.workDone?.[session.index]||qs.workRevealed);
+      let workBox='';if(needsWork){
+        let controls='';if(workDone)controls=`<div class="work-message good">${qs.workRevealed?`Der Schritt ist <span class="math">${escapeHtml(cleanDisplayText(q.work.answer))}</span>. Jetzt kannst du die Hauptaufgabe lösen.`:'Prima – jetzt setzt du das Ergebnis in den ganzen Term ein.'}</div>`;
+        else if(q.work.type==='text')controls=`<div class="sign-choice"><button class="btn btn-secondary" data-work-sign="+">+</button><button class="btn btn-secondary" data-work-sign="−">−</button></div>`;
+        else controls=inputWidget({id:'workInput',formId:'workForm',type:q.work.type,q:{...q.work,world:q.world},value:qs.workDraft||''});
+        const escapes=qs.workAttempts>=2&&!workDone?'<div class="solution-actions"><button class="btn btn-secondary btn-small" data-action="show-work">Zeig mir den Schritt</button><button class="btn btn-ghost btn-small" data-action="other-question">Andere Aufgabe</button></div>':'';
+        workBox=`<div id="workStep" class="work-step ${workDone?'done':''}"><h3>${workDone?'✓ Zwischenschritt geschafft':'🧩 Erst ein kleiner Zwischenschritt'}</h3><p>${escapeHtml(q.work.label)}</p>${controls}<div id="workMessage" class="work-message" aria-live="polite">${qs.workMessage?escapeHtml(qs.workMessage):''}</div>${escapes}</div>`;
+      }
+      let answers='';if(q.type==='choice')answers=`<div class="answer-grid">${q.options.map((o,i)=>`<button class="answer ${qs.eliminated.includes(o)?'choice-muted':''}" data-answer="${escapeAttr(o)}" ${session.answered||qs.eliminated.includes(o)||(needsWork&&!workDone)?'disabled':''}><span class="sr-only">Antwort ${i+1}: </span>${o}</button>`).join('')}</div>`;
+      else answers=inputWidget({id:'answerInput',formId:'inputForm',type:q.type,q,value:qs.draft||'',disabled:session.answered||(needsWork&&!workDone),buttonText:needsWork&&!workDone?'Nach dem Zwischenschritt':'Prüfen'});
+      const firstStep=qs.firstStepShown?`<div class="first-step"><strong>Erster Rechenschritt:</strong><br>${escapeHtml(q.firstStep)}</div>`:'';
+      const solutionButton=qs.firstStepShown&&!session.answered?'<div class="solution-actions"><button class="btn btn-secondary btn-small" data-action="show-solution">Lösung gemeinsam ansehen</button></div>':'';
+      const adaptiveNote=session.adaptiveMessage?`<div class="adaptive-note">🦊 ${escapeHtml(session.adaptiveMessage)}</div>`:'';session.adaptiveMessage='';
+      $('#lessonMain').innerHTML=`<div class="question-kicker">Aufgabe ${session.index+1} von ${session.total}</div><span class="stage-badge" data-stage="${q.stage}">${q.boss?'👑 ':''}${STAGE_LABELS[q.stage]||'Training'}</span>${adaptiveNote}<div class="question-text math">${q.prompt}</div>${workBox}${answers}<div id="hintBox" class="hint ${qs.hintUsed?'show':''}">🦊 <strong>Nova flüstert:</strong> ${q.hint}</div>${firstStep}${solutionButton}<div id="feedback" class="feedback" aria-live="polite"></div><div class="action-row"><div>${hintAllowed&&!session.answered?'<button class="btn btn-ghost btn-small" data-action="hint">🦊 Nova, ein Tipp!</button>':''}${session.mode==='world'?' <button class="btn btn-ghost btn-small" data-action="show-explanation">Erklärung nochmal</button>':''}</div><button id="nextBtn" class="btn btn-primary" data-action="next" style="display:none">Weiter geht’s →</button></div>`;
+      const feedback=$('#feedback');if(qs.formatMessage&&!session.answered){feedback.className='feedback show saved';feedback.innerHTML='<strong>Noch nicht bewertet.</strong>'+escapeHtml(qs.formatMessage)}else if(qs.attempts&&!session.answered){feedback.className='feedback show saved';feedback.innerHTML=qs.firstStepShown?'<strong>Zweiter Versuch – wir zerlegen es.</strong>Du darfst weiterprobieren oder die Lösung gemeinsam ansehen.':'<strong>Fast – probier es noch einmal.</strong>Nova hat dir einen Tipp eingeblendet. Dieser Versuch zählt noch nicht als Ergebnis.'}
+      if(session.answered&&session.answers.length){const last=session.answers[session.answers.length-1],hidden=strict;document.querySelectorAll('.answer').forEach(b=>{b.disabled=true;if(!hidden&&normalize(b.dataset.answer)===normalize(q.answer))b.classList.add('correct')});const input=$('#answerInput');if(input)input.disabled=true;if(hidden){feedback.className='feedback show saved';feedback.innerHTML='<strong>Antwort gespeichert ✓</strong>Die Lösung und Erklärung erscheinen erst in der Auswertung.'}else if(last.result==='solution'){feedback.className='feedback show bad';feedback.innerHTML=`<strong>Gemeinsam gelöst – diese Aufgabenart kommt zur Revanche.</strong>Richtig ist <span class="math">${escapeHtml(cleanDisplayText(q.answer))}</span>.<br>${escapeHtml(q.why)}`}else{feedback.className='feedback show good';feedback.innerHTML=`<strong>${last.result==='self'?'Selbst geschafft! 🎉':'Mit Novas Tipp geschafft! ✨'}</strong>${escapeHtml(praiseFor(q,last.result))}`}$('#nextBtn').style.display='inline-block'}
+      if(q.type!=='choice'&&!session.answered)setTimeout(()=>$(needsWork&&!workDone&&q.work.type!=='text'?'#workInput':'#answerInput')?.focus(),50);
+    }
+    function escapeAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}
+    function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+    function normalize(s){return String(s).trim().replace(/[−–—]/g,'-').replace(/\s+/g,'').replace(',','.').toLowerCase()}
+    function polynomialSignature(value){
+      const supers={'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9'};
+      let s=String(value).toLowerCase().replace(/[−–—]/g,'-').replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]+/g,m=>'^'+[...m].map(c=>supers[c]).join('')).replace(/[\s·*]/g,'').replace(/,/g,'.');
+      if(!s)return null;if(!/^[+-]/.test(s))s='+'+s;const parts=s.match(/[+-][^+-]+/g);if(!parts||parts.join('')!==s)return null;
+      const map={};
+      for(const part of parts){const sign=part[0]==='-'?-1:1,body=part.slice(1);if(/^\d+(?:\.\d+)?$/.test(body)){map.const=(map.const||0)+sign*Number(body);continue}const m=body.match(/^(\d*(?:\.\d+)?)?([a-z])(?:\^(\d+))?$/);if(!m)return null;const coefficient=m[1]===''||m[1]===undefined?1:Number(m[1]),power=m[3]?Number(m[3]):1,key=m[2]+'^'+power;map[key]=(map[key]||0)+sign*coefficient}
+      return JSON.stringify(Object.entries(map).filter(([,v])=>Math.abs(v)>1e-9).sort(([a],[b])=>a.localeCompare(b)));
+    }
+    function powerShorthand(q,value){
+      let s=String(value);if(q?.world===6&&/[⁰¹²³⁴⁵⁶⁷⁸⁹^]/.test(String(q.answer))){s=s.replace(/^([+\-−–—]?\d*)?([a-z])(\d+)$/i,(_,coef='',v,power)=>`${coef}${v}^${power}`)}return s;
+    }
+    function schoolDisplay(value){return String(value).replace(/[−–—]/g,'−').replace(/\^(\d+)/g,(_,n)=>sup(Number(n))).replace(/\*/g,' · ').replace(/\s+/g,' ').trim()}
+    function parseUserInput(q,value,typeOverride=null){
+      const type=typeOverride||q.type,raw=String(value??'');
+      if(type==='sign'){const n=normalize(raw);return n==='+'||n==='-'?{status:'valid',equal:n===normalize(q.answer),normalized:n,display:n==='-'?'−':'+'}:{status:'format',equal:false,display:''}}
+      if(type==='number'){const n=normalize(raw);if(!/^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(n))return {status:'format',equal:false,display:''};return {status:'valid',equal:Number(n)===Number(normalize(q.answer)),normalized:n,display:minus(n.replace(/^\+/,''))}}
+      const expanded=powerShorthand(q,raw),signature=polynomialSignature(expanded);if(signature===null)return {status:'format',equal:false,display:''};return {status:'valid',equal:signature===polynomialSignature(q.answer),normalized:expanded,display:schoolDisplay(expanded)};
+    }
+    function answersEqual(q,value){return parseUserInput(q,value).status==='valid'&&parseUserInput(q,value).equal}
+    function variableFor(q){const fromAnswer=String(q.answer||'').match(/[a-z]/i)?.[0],expression=String(q.prompt||'').includes(':')?String(q.prompt).split(':').slice(1).join(':'):String(q.prompt||'');return (fromAnswer||expression.match(/[a-z]/i)?.[0]||'x').toLowerCase()}
+    function fieldConfig(type,variable='x'){return type==='number'?{inputmode:'decimal',placeholder:'Deine Zahl',keys:['−']}:{inputmode:'decimal',placeholder:'Dein Term',keys:['+','−',variable,'hoch']}}
+    function updateLivePreview(input){if(!session||!input)return;const q=session.questions[session.index],qs=questionState(),work=input.id==='workInput',type=work?(q.work.type==='text'?'sign':q.work.type):q.type,target=$(work?'#workInputPreview':'#answerInputPreview');if(work)qs.workDraft=input.value;else qs.draft=input.value;const msg=previewText(work?{...q.work,world:q.world}:q,input.value,type);if(target){target.textContent=msg;target.classList.toggle('format',msg.startsWith('Das'))}persistSession()}
+    function insertAtCursor(targetId,text){const input=$('#'+targetId);if(!input||input.disabled)return;input.focus();const start=input.selectionStart??input.value.length,end=input.selectionEnd??start;input.setRangeText(text,start,end,'end');updateLivePreview(input)}
+    function createAttemptState(){return {attempts:0,hintUsed:false,eliminated:[],firstStepShown:false,solutionShown:false,workAttempts:0,workRevealed:false,draft:'',formatMessage:''}}
+    function workEscapeAvailable(attempts){return Number(attempts)>=2}
+    function scoreFor(result){return result==='self'?1:result==='hint'?.5:0}
+    function adaptiveTransition(old,result,strict=false){const next={shift:Number(old?.shift)||0,self:Number(old?.self)||0,solution:Number(old?.solution)||0,changed:null};if(strict)return next;if(result==='solution'){next.solution++;next.self=0;if(next.solution>=2&&next.shift===0){next.shift=-1;next.solution=0;next.changed='lighter'}}else if(result==='self'){next.self++;next.solution=0;if(next.self>=2&&next.shift<0){next.shift=0;next.self=0;next.changed='higher'}}else{next.self=0;next.solution=0}return next}
+    function countResults(rows=[]){const out={self:0,hint:0,solution:0};rows.forEach(r=>{const key=r.result||(r.ok?'self':'solution');out[key]=(out[key]||0)+1});return out}
+    function attemptTransition(old,event,{strict=false,kind='input'}={}){
+      const next=Object.assign(createAttemptState(),old||{});if(event.type==='hint'){next.hintUsed=true;return {state:next,action:'hint'}}if(event.type==='format')return {state:next,action:'format'};
+      if(event.correct){const result=next.hintUsed||next.attempts>0||next.workRevealed?'hint':'self';return {state:next,action:'complete',result,score:scoreFor(result)}}
+      next.attempts++;if(strict){next.solutionShown=true;return {state:next,action:'complete',result:'solution',score:0}}
+      next.hintUsed=true;if(kind==='choice'){if(next.attempts>=2){next.solutionShown=true;return {state:next,action:'complete',result:'solution',score:0}}return {state:next,action:'retry'}}
+      if(next.attempts>=3){next.solutionShown=true;return {state:next,action:'complete',result:'solution',score:0}}if(next.attempts>=2){next.firstStepShown=true;return {state:next,action:'step'}}return {state:next,action:'retry'};
+    }
+    function checkWork(value){
+      if(!session||session.answered)return;const q=session.questions[session.index],qs=questionState();if(!q.work)return;const type=q.work.type==='text'?'sign':q.work.type,parsed=parseUserInput({...q.work,world:q.world},value,type);qs.workDraft=String(value);
+      if(parsed.status==='format'){qs.workMessage='Das kann ich noch nicht lesen. Der Versuch zählt nicht – nutze gern die Mathe-Tasten.';persistSession();renderQuestion();return}
+      if(!parsed.equal){qs.workAttempts++;qs.workMessage=qs.workAttempts>=2?'Du hängst nicht fest: Lass dir den Schritt zeigen oder nimm eine neue Aufgabe.':'Noch nicht ganz. Dieser Zwischenschritt zählt nicht als falsche Hauptaufgabe.';persistSession();renderQuestion();return}
+      session.workDone=session.workDone||{};session.workDone[session.index]=true;qs.workMessage='';persistSession();renderQuestion();toast('Zwischenschritt stimmt ✓');
+    }
+    function mistakeKey(m){return m.templateId+'|'+(m.traits||[]).slice().sort().join(',')+'|'+(m.stage||'training')}
+    function addMistake(q){const item={templateId:q.templateId,world:q.world,traits:q.traits||[],stage:q.stage||'training'},key=mistakeKey(item);state.mistakes=[item,...(state.mistakes||[]).filter(m=>mistakeKey(m)!==key)].slice(0,20)}
+    function collectibleFor(q){return TYPE_COLLECTIBLES[q.templateId]||{emoji:'🎁',name:'Fundstück '+q.templateId,text:'Du hast diese Aufgabenart gemeistert.'}}
+    function awardCollectibles(collections,bonusCollections,q){const next={...(collections||{})},bonuses={...(bonusCollections||{})};if(!next[q.templateId])next[q.templateId]=collectibleFor(q);if(q.traits?.includes('negativeResult')&&!bonuses.minusMagnet)bonuses.minusMagnet=MINUS_BONUS;return {collectibles:next,bonusCollectibles:bonuses}}
+    function winRevenge(q){const key=q.revengeKey||mistakeKey(q),before=new Set([...Object.keys(state.collectibles||{}),...Object.keys(state.bonusCollectibles||{})]),awards=awardCollectibles(state.collectibles,state.bonusCollectibles,q);state.mistakes=(state.mistakes||[]).filter(m=>mistakeKey(m)!==key);state.collectibles=awards.collectibles;state.bonusCollectibles=awards.bonusCollectibles;session.newRewards=session.newRewards||[];Object.entries({...awards.collectibles,...awards.bonusCollectibles}).forEach(([id,item])=>{if(!before.has(id))session.newRewards.push(item)})}
+    function completeAnswer(q,value,result){
+      if(session.answered)return;const score=scoreFor(result),ok=result!=='solution';session.answered=true;session.points=(session.points||0)+score;session.correct=session.points;session.counts=session.counts||{self:0,hint:0,solution:0};session.counts[result]++;state.answered++;state.points=(state.points||0)+score;state.correct=state.points;
+      state.daily=recordDailyAnswer(state.daily);if(result==='solution')addMistake(q);else if(q.revenge&&result==='self')winRevenge(q);
+      session.selfRun=result==='self'?(session.selfRun||0)+1:0;const adaptive=adaptiveTransition({shift:session.stageShift,self:session.adaptiveSelfRun,solution:session.solutionRun},result,session.mode==='test'||session.mode==='mistakes');session.stageShift=adaptive.shift;session.adaptiveSelfRun=adaptive.self;session.solutionRun=adaptive.solution;if(adaptive.changed==='lighter')session.adaptiveMessage='Ich lege eine kleine Trainingsrunde ein.';if(adaptive.changed==='higher')session.adaptiveMessage='Das sitzt wieder – wir gehen zurück auf deine geplante Stufe.';session.answers.push({q,ok,given:value,result,score});saveState();persistSession();renderQuestion();updateSessionUI();if(result==='self'&&session.selfRun===4){confetti();toast('Viermal selbst geschafft – stark!')}
+    }
+    function answer(value){
+      if(!session||session.answered)return;const q=session.questions[session.index],qs=questionState(),strict=session.mode==='test';qs.formatMessage='';if(q.type!=='choice')qs.draft=String(value);
+      let correct=false;if(q.type==='choice')correct=normalize(value)===normalize(q.answer);else{const parsed=parseUserInput(q,value);if(parsed.status==='format'){qs.formatMessage='Prüfe deine Schreibweise. Erlaubt sind Zahlen, der Buchstabe und die Mathe-Tasten. Dein Versuch bleibt erhalten.';const tr=attemptTransition(qs,{type:'format'},{strict,kind:'input'});session.questionStates[session.index]=tr.state;persistSession();renderQuestion();return}correct=parsed.equal}
+      const tr=attemptTransition(qs,{type:'answer',correct},{strict,kind:q.type==='choice'?'choice':'input'});session.questionStates[session.index]=tr.state;if(tr.action==='complete'){completeAnswer(q,value,tr.result);return}
+      if(q.type==='choice'&&!correct)tr.state.eliminated=[...new Set([...tr.state.eliminated,value])];persistSession();renderQuestion();
+    }
+    function showSolution(){if(!session||session.answered)return;const q=session.questions[session.index],qs=questionState();qs.solutionShown=true;completeAnswer(q,qs.draft||'Lösung angesehen','solution')}
+    function showWork(){const q=session.questions[session.index],qs=questionState();qs.workRevealed=true;qs.hintUsed=true;qs.workDraft=q.work.answer;session.workDone=session.workDone||{};session.workDone[session.index]=true;persistSession();renderQuestion()}
+    function otherQuestion(){const old=session.questions[session.index],fresh=makeQuestionFromTemplate(old.templateId,old.traits,true,old.prompt);fresh.revenge=old.revenge;fresh.revengeKey=old.revengeKey;session.questions[session.index]=fresh;delete session.questionStates[session.index];delete session.workDone[session.index];persistSession();renderQuestion();toast('Neue Zahlen, gleiche Aufgabenart ✓')}
+    function stageWithShift(stage,shift){if(stage==='boss')return 'boss';const index=Math.max(0,Math.min(2,STAGES.indexOf(stage)+(Number(shift)||0)));return STAGES[index]}
+    function prepareAdaptiveQuestion(index){if(!session||session.mode==='test'||session.mode==='mistakes'||index>=session.total)return;const old=session.questions[index],planned=old.plannedStage||old.stage||'training';if(planned==='boss'){if(session.stageShift<0&&old.bossWork)old.work=old.bossWork;return}const wanted=stageWithShift(planned,session.stageShift);if(wanted===old.stage)return;const q=makeLeveledQuestion(old.world,wanted,state.hobbies);q.plannedStage=planned;session.questions[index]=q}
+    function nextQuestion(){session.index++;session.answered=false;prepareAdaptiveQuestion(session.index);if(session.introSwitches?.[session.index]){session.intro=true;session.introWorld=session.introSwitches[session.index];session.introStep=0;persistSession();renderIntro(worlds[session.introWorld-1]);return}persistSession();renderQuestion()}
+    function updateSessionUI(){
+      if(!session)return; const pct=Math.round((session.index/session.total)*100);
+      $('#questionCount').textContent=(session.intro?session.index:Math.min(session.index+1,session.total))+' / '+session.total;$('#correctCount').textContent=session.mode==='test'?'–':String(Math.round((session.points||0)*10)/10);
+      $('#lessonProgress').style.width=pct+'%';$('#lessonProgress').parentElement.setAttribute('aria-valuenow',pct);
+    }
+    function addAttempt(worldId,score){state.attempts=state.attempts||{};state.attempts[worldId]=[...(state.attempts[worldId]||[]),score].slice(-10);state.best[worldId]=Math.max(state.best[worldId]||0,score)}
+    function worldResults(currentSession){const out={};worlds.forEach(w=>{const rows=(currentSession.answers||[]).filter(a=>a.q.world===w.id);if(rows.length)out[w.id]={count:rows.length,percent:Math.round(rows.reduce((sum,a)=>sum+(a.score??(a.ok?1:0)),0)/rows.length*100),bossPassed:rows.some(a=>a.q.boss&&a.result!=='solution')}});return out}
+    function starCount(percent,bossPassed=true){const raw=percent>=85?3:percent>=65?2:percent>=45?1:0;return raw===3&&!bossPassed?2:raw}
+    function applySessionProgress(s,currentSession){const results=worldResults(currentSession);s.stars=s.stars||{};s.worldCompleted=s.worldCompleted||{};Object.entries(results).forEach(([id,r])=>{if(r.count<6)return;s.worldCompleted[id]=true;s.stars[id]=Math.max(s.stars[id]||0,starCount(r.percent,r.bossPassed))});s.plan=s.plan||{completed:[],activeDay:null};if(currentSession.mode==='mistakes'||currentSession.planDay===6)s.plan.completed=[...new Set([...(s.plan.completed||[]),6])];if(currentSession.mode==='test')s.plan.completed=[...new Set([...(s.plan.completed||[]),7])];syncStationProgress(s);return results}
+    function roundRecord(currentSession){const counts=currentSession.counts||countResults(currentSession.answers),percent=currentSession.total?Math.round((currentSession.points||0)/currentSession.total*100):0,results=worldResults(currentSession);return {date:localDateKey(),mode:currentSession.mode,modeLabel:currentSession.planDay?`Tag ${currentSession.planDay}`:currentSession.title||currentSession.mode,worlds:[...new Set((currentSession.answers||[]).map(a=>a.q.world))],percent,percentagesByWorld:Object.fromEntries(Object.entries(results).map(([id,r])=>[id,r.percent])),counts:{self:counts.self||0,hint:counts.hint||0,solution:counts.solution||0}}}
+    function recordSessionAttempts(){
+      if(session.mode==='world'){addAttempt(session.world,Math.round((session.points||0)/session.total*100));return}
+      worlds.forEach(w=>{const rows=session.answers.filter(a=>a.q.world===w.id);if(rows.length>=2)addAttempt(w.id,Math.round(rows.reduce((sum,a)=>sum+(a.score??(a.ok?1:0)),0)/rows.length*100))});
+    }
+    function resultComparison(current,previous,best,stars=0,title='dieser Welt'){if(previous===null||previous===undefined)return `Deine erste Runde in ${title} – ab jetzt siehst du hier deinen Fortschritt.`;if(current>=previous)return `Letztes Mal ${previous} % → heute ${current} %`;const priorBest=Math.max(Number(best)||0,Number(previous)||0);if(priorBest>0){const starNote=Number(stars)>0?' Deine Sterne bleiben dir.':'';return `Deine beste Runde: ${priorBest} %.${starNote}`}return ''}
+    function resultLearning(answers=[],worldId=0){const solved=answers.filter(a=>a.result==='self'||a.result==='hint');if(solved.length){const q=[...solved].sort((a,b)=>STAGES.indexOf(b.q.stage)-STAGES.indexOf(a.q.stage))[0].q;return {learned:true,text:q.strategy}}const seen={1:'wie Variablen und Koeffizienten funktionieren',2:'wie aus einer Geschichte ein Term wird',3:'wie gleiche Termteile sortiert werden',4:'wie Klammern aufgehen',5:'wie Zahlen für Variablen eingesetzt werden',6:'wie Hochzahlen zusammenarbeiten'}[worldId]||'wie Terme Schritt für Schritt gelöst werden';return {learned:false,text:`Heute hast du gesehen, ${seen}. Beim nächsten Mal probierst du es selbst.`}}
+    function resultScorePresentation(total,percent){return percent<45?{primary:`${total} Aufgaben bearbeitet`,secondary:`${percent} %`}:{primary:`${percent} %`,secondary:''}}
+    function finishSession(){
+      if(session.timer)clearInterval(session.timer);
+      session.completed=true;clearActiveSession();
+      const pct=session.total?Math.round((session.points||0)/session.total*100):0,oldStars={...(state.stars||{})},oldBest={...(state.best||{})},results=worldResults(session),oldHistory=[...(state.roundHistory||[])];
+      applySessionProgress(state,session);recordSessionAttempts();state.roundHistory=[...oldHistory,roundRecord(session)].slice(-50);if(session.planDay)state.plan.activeDay=null;
+      saveState();renderWorlds();
+      const weak=[...new Set(session.answers.filter(a=>a.result==='solution').map(a=>worlds[a.q.world-1].title))];
+      const wrong=session.answers.filter(a=>a.result==='solution');
+      const review=session.mode==='test'?`<div class="review-list"><h3>${wrong.length?'Diese Aufgaben schauen wir noch einmal an':'Alle Aufgaben richtig!'}</h3>${wrong.map((a,i)=>`<div class="review-item"><strong>${i+1}. ${escapeHtml(a.q.prompt)}</strong><p class="review-answer">Deine Antwort: ${escapeHtml(a.given||'keine Antwort')}</p><p class="review-correct">Richtig: ${escapeHtml(cleanDisplayText(a.q.answer))}</p><p>${escapeHtml(a.q.why)}</p></div>`).join('')}</div>`:'';
+      const practiceGrade=session.mode==='test'?estimatedGrade(pct):null;
+      const gradeBox=session.mode==='test'?`<div class="rule-box">Übungsnote nach deinem eingestellten Schlüssel: <strong>${practiceGrade}</strong><br><small>Note 2 beginnt bei ${state.testSettings.grade2Percent} %. Das ist eine Lern-Einschätzung, keine echte Schulnote.</small></div>`:'';
+      $('#questionCount').textContent=session.total+' / '+session.total;$('#lessonProgress').style.width='100%';
+      const categories=session.counts||countResults(session.answers),qualified=Object.entries(results).filter(([,r])=>r.count>=6),rewardBits=[],comparisons=[];let delay=0;
+      qualified.forEach(([id,r])=>{const stars=state.stars?.[id]||0,roundStars=starCount(r.percent,r.bossPassed);for(let n=1;n<=roundStars;n++)rewardBits.push(`<span class="reward-pop" style="--delay:${delay++*.18}s">⭐ ${escapeHtml(worlds[id-1].title)}${n===3?' · Boss geschafft':''}</span>`);const previous=[...oldHistory].reverse().find(h=>h.percentagesByWorld?.[id]!==undefined)?.percentagesByWorld?.[id],comparison=resultComparison(r.percent,previous,oldBest[id],oldStars[id]||0,worlds[id-1].title);if(comparison)comparisons.push(`<p><strong>${worlds[id-1].icon} ${escapeHtml(worlds[id-1].title)}:</strong> ${escapeHtml(comparison)}</p>`);if((oldStars[id]||0)<2&&stars>=2)rewardBits.push(`<span class="reward-pop" style="--delay:${delay++*.18}s">${ACCESSORIES[id].emoji} Neues Accessoire: ${ACCESSORIES[id].name}</span>`);if((oldStars[id]||0)<3&&stars>=3)rewardBits.push(`<span class="reward-pop" style="--delay:${delay++*.18}s">✨ ${ACCESSORIES[id].name} wird golden</span>`)});
+      (session.newRewards||[]).forEach(item=>rewardBits.push(`<span class="reward-pop" style="--delay:${delay++*.18}s">${item.emoji} Fundstück: ${escapeHtml(item.name)}</span>`));
+      const learning=resultLearning(session.answers,session.world||session.answers[0]?.q.world||0),score=resultScorePresentation(session.total,pct),scoreHtml=pct<45?`<div class="worked-count">${escapeHtml(score.primary)}</div><div class="result-score result-score-small">${escapeHtml(score.secondary)}</div>`:`<div class="result-score">${escapeHtml(score.primary)}</div>`,learningHtml=learning.learned?`<div class="memory"><strong>Neu gelernt:</strong> ${escapeHtml(learning.text)}</div>`:`<div class="memory">${escapeHtml(learning.text)}</div>`;
+      $('#lessonMain').innerHTML=`<div class="result"><div class="result-emoji">${pct>=85?'🏆':pct>=60?'🌟':'🦊'}</div><h2>${session.mode==='test'?'Probe-Schulaufgabe ausgewertet':'Runde geschafft!'}</h2><div class="reward-row">${rewardBits.join('')||(pct===0?'<span class="reward-pop">Runde beendet</span>':'<span class="reward-pop">✓ Mission abgeschlossen</span>')}</div>${scoreHtml}<p><strong>${categories.self||0} selbst · ${categories.hint||0} mit Tipp · ${categories.solution||0} zum Üben</strong></p>${comparisons.join('')}${learningHtml}${gradeBox}${weak.length?`<p><strong>Noch einmal ansehen:</strong> ${weak.join(', ')}</p>`:'<p>Keine offene Stolperstelle – Mission gemeistert!</p>'}${review}<div class="hero-actions" style="justify-content:center"><button class="btn btn-primary" data-action="repeat">Noch eine Runde</button><button class="btn" data-action="home">Zur Übersicht</button></div></div>`;
+      if(pct>=85)confetti();
+    }
+    function estimatedGrade(pct){
+      const g2=state.testSettings.grade2Percent||80;
+      if(pct>=Math.min(95,g2+10))return '1';if(pct>=g2)return '2';if(pct>=g2-15)return '3';if(pct>=g2-30)return '4';if(pct>=Math.max(15,g2-50))return '5';return '6';
+    }
+    function firstUnansweredIndex(currentSession){return Math.min(currentSession.total,currentSession.index+(currentSession.answered?1:0))}
+    function finishTimedSession(){
+      if(session.mode==='test'){
+        session.counts=session.counts||{self:0,hint:0,solution:0};for(let i=firstUnansweredIndex(session);i<session.total;i++){const q=session.questions[i];session.answers.push({q,ok:false,given:'keine Antwort',result:'solution',score:0});session.counts.solution++;state.answered++;state.streak=0;addMistake(q)}
+        session.index=session.total;saveState();toast('Zeit vorbei – jetzt kommt die Auswertung.');
+      }else session.total=session.index;
+      finishSession();
+    }
+    function startTimer(){
+      const title=$('#modeTitle');
+      const label=session.mode==='test'?'🏁 Probe-Schulaufgabe':'⚡ 10-Minuten-Blitz';
+      const tick=()=>{const left=Math.max(0,session.ends-Date.now()),m=Math.floor(left/60000),s=Math.floor((left%60000)/1000);title.textContent=`${label} · ${m}:${String(s).padStart(2,'0')}`;if(s%10===0)persistSession();if(left<=0){clearInterval(session.timer);finishTimedSession()}};
+      tick();session.timer=setInterval(tick,1000);
+    }
+
+    document.addEventListener('click',e=>{
+      const worldBtn=e.target.closest('[data-world]');if(worldBtn){startWorld(Number(worldBtn.dataset.world));return}
+      const planBtn=e.target.closest('[data-plan-day]');if(planBtn){const day=Number(planBtn.dataset.planDay);if(savedSession?.planDay===day)resumeSavedSession();else startPlanDay(day);return}
+      const insert=e.target.closest('[data-insert]');if(insert){insertAtCursor(insert.dataset.insertTarget,insert.dataset.insert);return}
+      const workSign=e.target.closest('[data-work-sign]');if(workSign){checkWork(workSign.dataset.workSign);return}
+      const ans=e.target.closest('[data-answer]');if(ans){answer(ans.dataset.answer);return}
+      const action=e.target.closest('[data-action]')?.dataset.action;if(!action)return;
+      if(action==='home'){pauseCurrentSession();session=null;showView('homeView');renderWorlds();updateResumeUI()}
+      if(action==='parents'){showView('parentView');renderParentReport()}
+      if(action==='today'){const btn=e.target.closest('[data-action="today"]'),kind=btn.dataset.todayKind,value=Number(btn.dataset.todayValue);if(kind==='resume')resumeSavedSession();else if(kind==='station')startPlanDay(value);else if(kind==='mistakes')startMistakeTraining();else if(kind==='world')startWorld(value)}
+      if(action==='continue'){if(savedSession)resumeSavedSession();else{const next=worlds.find(w=>(state.stars[w.id]||0)<2)||worlds[0];startWorld(next.id)}}
+      if(action==='resume')resumeSavedSession();
+      if(action==='discard-active'&&confirm('Den gespeicherten Zwischenstand wirklich verwerfen?')){clearActiveSession();toast('Zwischenstand verworfen.')}
+      if(action==='open-cheat')showView('cheatView');
+      if(action==='free')startMixed('free');
+      if(action==='blitz')startMixed('blitz');
+      if(action==='test')startMixed('test');
+      if(action==='mistakes')startMistakeTraining();
+      if(action==='print-report')window.print();
+      if(action==='export-progress')downloadProgress();
+      if(action==='import-progress')$('#importProgressInput').click();
+      if(action==='save-name'){savePlayerName($('#playerNameInput')?.value||'');toast(state.playerName?'Name gespeichert ✓':'Die App bleibt ohne Namen ✓')}
+      if(action==='skip-name'){savePlayerName('');$('#namePrompt').hidden=true;toast('Du kannst deinen Namen später im Elternbereich eintragen.')}
+      if(action==='intro-next'){session.introStep=Math.min(2,(session.introStep||0)+1);persistSession();renderIntro(worlds[(session.introWorld||session.world)-1])}
+      if(action==='intro-back'){session.introStep=Math.max(0,(session.introStep||0)-1);persistSession();renderIntro(worlds[(session.introWorld||session.world)-1])}
+      if(action==='begin-questions'){state.explanationsSeen=state.explanationsSeen||{};state.explanationsSeen[session.introWorld||session.world]=true;saveState();session.intro=false;session.introStep=0;session.returnToQuestion=false;persistSession();renderQuestion()}
+      if(action==='show-explanation'){questionState().hintUsed=true;session.intro=true;session.introWorld=session.questions[session.index].world;session.introStep=0;session.returnToQuestion=true;persistSession();renderIntro(worlds[session.introWorld-1])}
+      if(action==='return-question'){session.intro=false;session.introStep=0;session.returnToQuestion=false;persistSession();renderQuestion()}
+      if(action==='hint'){const tr=attemptTransition(questionState(),{type:'hint'},{strict:false,kind:'input'});session.questionStates[session.index]=tr.state;persistSession();renderQuestion()}
+      if(action==='show-solution')showSolution();
+      if(action==='show-work')showWork();
+      if(action==='other-question')otherQuestion();
+      if(action==='next')nextQuestion();
+      if(action==='repeat'){const old=session;if(old.planDay)startPlanDay(old.planDay);else if(old.mode==='world')startWorld(old.world);else if(old.mode==='mistakes')startMistakeTraining();else startMixed(old.mode)}
+      if(action==='reset'&&confirm('Wirklich alle Sterne, Serien, gespeicherten Fehler und den Zwischenstand löschen?')){localStorage.removeItem(STORE);localStorage.removeItem(ACTIVE_STORE);localStorage.removeItem(LEGACY_STORE);localStorage.removeItem(LEGACY_ACTIVE_STORE);location.reload()}
+    });
+    document.addEventListener('pointerdown',e=>{if(e.target.closest('[data-insert]'))e.preventDefault()});
+    document.addEventListener('input',e=>{if(e.target.id==='answerInput'||e.target.id==='workInput')updateLivePreview(e.target)});
+    document.addEventListener('submit',e=>{
+      if(e.target.id==='nameForm'){e.preventDefault();savePlayerName($('#firstNameInput')?.value||'');$('#namePrompt').hidden=true;toast(state.playerName?`Willkommen, ${state.playerName}!`:'Willkommen zu deinem Abenteuer!');return}
+      if(e.target.id==='workForm'){e.preventDefault();const v=$('#workInput').value;if(v.trim()===''){toast('Trag zuerst das Zwischenergebnis ein.');return}checkWork(v)}
+      if(e.target.id==='inputForm'){e.preventDefault();const v=$('#answerInput').value;if(v.trim()===''){toast('Trag zuerst eine Antwort ein.');return}answer(v)}
+    });
+    document.addEventListener('change',async e=>{
+      if(e.target.matches('[data-hobby]')){const hobby=e.target.dataset.hobby,current=new Set(state.hobbies||[]);if(e.target.checked&&current.size>=2){e.target.checked=false;toast('Du kannst zwei Lieblingsthemen auswählen.');return}if(e.target.checked)current.add(hobby);else current.delete(hobby);state.hobbies=[...current];saveState();toast('Deine Geschichten sind gespeichert ✓')}
+      if(e.target.id==='testMinutes'){state.testSettings.minutes=Number(e.target.value);saveState();toast('Arbeitszeit gespeichert ✓')}
+      if(e.target.id==='grade2Percent'){state.testSettings.grade2Percent=Number(e.target.value);saveState();toast('Zielwert gespeichert ✓')}
+      if(e.target.id==='importProgressInput'&&e.target.files?.[0]){try{const restored=importProgressData(await e.target.files[0].text());if(confirm('Den aktuellen Fortschritt durch diese Sicherung ersetzen?')){restoreProgress(restored);toast('Fortschritt wiederhergestellt ✓')}}catch(error){toast('Diese Sicherungsdatei konnte ich nicht lesen.')}finally{e.target.value=''}}
+    });
+    window.addEventListener('beforeunload',()=>{if(session&&!session.completed)persistSession()});
+    savedSession=loadActiveSession();renderWorlds();updateHeader();updateResumeUI();renderPersonalization();if(!state.nameAsked)showNamePrompt();
+  })();
+  </script>
+</body>
+</html>
